@@ -25,7 +25,16 @@ TableBody.displayName = "TableBody";
 
 const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
   ({ className, ...props }, ref) => (
-    <tfoot ref={ref} className={cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className)} {...props} />
+    <tfoot
+      ref={ref}
+      className={cn(
+        "border-t border-brand-teal-light/30",
+        "bg-gradient-medkey-light/30",
+        "font-medium [&>tr]:last:border-b-0",
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 TableFooter.displayName = "TableFooter";
@@ -34,7 +43,13 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
-      className={cn("border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50", className)}
+      className={cn(
+        "border-b border-border/50",
+        "transition-colors duration-150",
+        "hover:bg-brand-teal-light/10",
+        "data-[state=selected]:bg-brand-teal-light/20",
+        className,
+      )}
       {...props}
     />
   ),
@@ -46,7 +61,12 @@ const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<
     <th
       ref={ref}
       className={cn(
-        "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        "h-14 px-6 text-left align-middle",
+        "font-bold text-sm uppercase tracking-wider",
+        "text-brand-teal-dark bg-gradient-medkey-light/30",
+        "first:rounded-l-lg last:rounded-r-lg",
+        "[&:has([role=checkbox])]:pr-0",
+        "border-b-2 border-brand-teal-light/30",
         className,
       )}
       {...props}

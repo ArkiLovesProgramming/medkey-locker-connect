@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronRight, CheckCircle, AlertCircle, Clock, Check, Bell } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { AvatarSVG } from "@/assets/AvatarSVG";
+import { AvatarWithImage } from "@/assets/AvatarSVG";
 import { useFamilyMembers, usePrescriptionsNeedingApproval, useMedications, useDashboardData } from "@/hooks/useData";
 import { formatRelativeTime } from "@/utils/formatters";
 import { PRESCRIPTION_STATUS } from "@/utils/constants";
@@ -16,6 +16,12 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
   const { data: activeMeds } = useMedications(selectedMember !== "all" ? { memberId: selectedMember } : undefined);
   const { data: pendingPrescriptions } = usePrescriptionsNeedingApproval();
   const { data: dashboardData } = useDashboardData();
+
+  // Helper to get avatar URL by member name
+  const getAvatarUrl = (memberName: string) => {
+    const member = familyMembers?.find(m => m.firstName === memberName);
+    return member?.avatar;
+  };
 
   if (membersLoading) {
     return (
@@ -37,9 +43,14 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
         <h1 className="text-2xl font-bold text-foreground">Family Dashboard</h1>
         <button
           onClick={() => onNavigate(6)}
-          className="w-11 h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform"
+          className="w-11 h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform overflow-hidden"
         >
-          <span className="text-sm font-semibold text-teal-dark">SJ</span>
+          <AvatarWithImage
+            imageUrl={familyMembers?.find(m => m.id === 'user-001')?.avatar}
+            alt="Sarah Jenkins"
+            size={44}
+            className="w-11 h-11"
+          />
         </button>
       </div>
 
@@ -53,8 +64,9 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
               onClick={() => setSelectedMember(m.id)}
               className="flex flex-col items-center flex-shrink-0 group"
             >
-              <AvatarSVG
-                name={`${m.firstName} ${m.lastName}`}
+              <AvatarWithImage
+                imageUrl={(m as any).avatar}
+                alt={`${m.firstName} ${m.lastName}`}
                 size={64}
                 className={`rounded-2xl transition-all duration-200 active:scale-95 ${
                   selectedMember === m.id
@@ -119,8 +131,9 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
               className="w-full bg-card rounded-2xl p-4 shadow-sm mb-3 text-left active:scale-[0.98] transition-transform duration-150"
             >
               <div className="flex items-start gap-3">
-                <AvatarSVG
-                  name={med.memberName}
+                <AvatarWithImage
+                  imageUrl={getAvatarUrl(med.memberName)}
+                  alt={med.memberName}
                   size={48}
                   className="rounded-xl flex-shrink-0"
                 />

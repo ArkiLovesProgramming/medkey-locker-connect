@@ -2,8 +2,8 @@ import { ApiResponse, ApiError } from '@/types';
 
 // Configuration
 const API_CONFIG = {
-  baseDelay: 500, // Base delay in ms
-  maxDelay: 2000, // Maximum delay in ms
+  baseDelay: 100, // Base delay in ms
+  maxDelay: 400, // Maximum delay in ms
   errorRate: 0.05, // 5% chance of random error (for testing)
 };
 

@@ -3,6 +3,8 @@ import {
   HelpCircle, LogOut, ChevronRight, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { AvatarWithImage } from "@/assets/AvatarSVG";
+import { useFamilyMembers } from "@/hooks/useData";
 
 interface ProfileScreenProps {
   onNavigate: (screen: number) => void;
@@ -35,6 +37,9 @@ const menuGroups = [
 ];
 
 const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
+  const { data: familyMembers } = useFamilyMembers();
+  const primaryUser = familyMembers?.find(m => m.role === 'primary');
+  
   const handleMenuClick = (label: string, danger?: boolean) => {
     if (danger) {
       toast({ title: "👋 Logging Out", description: "You have been logged out successfully." });
@@ -51,12 +56,17 @@ const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
       <div className="flex flex-col items-center mb-5">
         <button
           onClick={() => toast({ title: "📸 Change Photo", description: "Profile photo upload coming soon." })}
-          className="w-20 h-20 rounded-full bg-teal-light flex items-center justify-center border-2 border-border mb-3 active:scale-95 transition-transform"
+          className="w-20 h-20 rounded-full bg-teal-light flex items-center justify-center border-2 border-border mb-3 active:scale-95 transition-transform overflow-hidden"
         >
-          <span className="text-xl font-bold text-teal-dark">SJ</span>
+          <AvatarWithImage
+            imageUrl={primaryUser?.avatar}
+            alt={primaryUser?.firstName || 'User'}
+            size={80}
+            className="w-20 h-20"
+          />
         </button>
-        <p className="text-lg font-bold text-foreground">Sarah Miller</p>
-        <p className="text-sm text-muted-foreground">sarah.miller@email.com</p>
+        <p className="text-lg font-bold text-foreground">{primaryUser ? `${primaryUser.firstName} ${primaryUser.lastName}` : 'Sarah Jenkins'}</p>
+        <p className="text-sm text-muted-foreground">{primaryUser?.email || 'sarah.jenkins@email.com'}</p>
       </div>
 
       {/* Premium Banner */}

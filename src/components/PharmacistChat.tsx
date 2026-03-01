@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { useChat } from "@/hooks/useChat";
 import { useUserProfile, useChatConversations, useQuickReplies } from "@/hooks/useData";
 import { formatMessageTime } from "@/utils/formatters";
+import { AvatarWithImage } from "@/assets/AvatarSVG";
 
 interface PharmacistChatProps {
   onNavigate: (screen: number) => void;
@@ -31,13 +32,13 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
-              <span className="text-sm font-bold text-teal-dark">
-                {conversation?.pharmacist ? 
-                  conversation.pharmacist.name.split(' ').map(n => n[0]).join('').slice(0, 2) : 
-                  'MC'
-                }
-              </span>
+            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
+              <AvatarWithImage
+                imageUrl={conversation?.pharmacist?.avatar}
+                alt={conversation?.pharmacist?.name || 'Pharmacist'}
+                size={44}
+                className="w-11 h-11"
+              />
             </div>
             <div>
               <p className="text-primary-foreground font-bold text-sm">
@@ -73,10 +74,13 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
           if (msg.senderType === "pharmacist") {
             return (
               <div key={msg.id} className="flex gap-2 max-w-[85%] animate-fade-in">
-                <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-[10px] font-bold text-teal-dark">
-                    {conversation?.pharmacist?.name.split(' ').map(n => n[0]).join('').slice(0, 2) || 'MC'}
-                  </span>
+                <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
+                  <AvatarWithImage
+                    imageUrl={conversation?.pharmacist?.avatar}
+                    alt={conversation?.pharmacist?.name || 'Pharmacist'}
+                    size={28}
+                    className="w-7 h-7"
+                  />
                 </div>
                 <div className="bg-card rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
                   <p className="text-sm text-foreground leading-relaxed">{msg.text}</p>
@@ -96,8 +100,13 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
         {/* Typing indicator */}
         {isTyping && (
           <div className="flex gap-2 max-w-[85%] animate-fade-in">
-            <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
-              <span className="text-[10px] font-bold text-teal-dark">MC</span>
+            <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
+              <AvatarWithImage
+                imageUrl={conversation?.pharmacist?.avatar}
+                alt={conversation?.pharmacist?.name || 'Pharmacist'}
+                size={28}
+                className="w-7 h-7"
+              />
             </div>
             <div className="bg-card rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
               <div className="flex gap-1.5 items-center h-5">

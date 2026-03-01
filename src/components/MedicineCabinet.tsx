@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search, Clock, Check, ChevronRight, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { AvatarSVG } from "@/assets/AvatarSVG";
+import { AvatarWithImage } from "@/assets/AvatarSVG";
 import { useMedications, usePastMedications, useFamilyMembers, useRefillRequest } from "@/hooks/useData";
 import { formatDosage } from "@/utils/formatters";
 
@@ -28,6 +28,12 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
   const filteredPast = (pastMedsData || []).filter(
     (m) => (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  // Helper to get avatar URL by member name
+  const getAvatarUrl = (memberName: string) => {
+    const member = familyMembers?.find(m => m.firstName === memberName);
+    return member?.avatar;
+  };
 
   const handleRefillRequest = (medicationId: string, prescriptionId: string, medicationName: string) => {
     refillMutation.mutate(
@@ -96,7 +102,12 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             }`}
           >
             {f !== "all" && (
-              <AvatarSVG name={filterLabels[f]} size={20} className="rounded-full" />
+              <AvatarWithImage
+                imageUrl={familyMembers?.find(m => m.id === f)?.avatar}
+                alt={filterLabels[f] || f}
+                size={20}
+                className="rounded-full"
+              />
             )}
             {filterLabels[f] || f}
           </button>
@@ -117,7 +128,12 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             filteredActive.map((med) => (
               <div key={med.prescriptionId} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
                 <div className="flex items-start gap-3">
-                  <AvatarSVG name={med.memberName} size={48} className="rounded-xl flex-shrink-0" />
+                  <AvatarWithImage
+                    imageUrl={getAvatarUrl(med.memberName)}
+                    alt={med.memberName}
+                    size={48}
+                    className="rounded-xl flex-shrink-0"
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <p className="font-bold text-foreground text-lg">{med.name}</p>

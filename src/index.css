@@ -337,4 +337,60 @@
   .dark .focus-medkey {
     @apply focus:ring-offset-background;
   }
+
+  /* Mobile Touch Optimization Utilities */
+  .touch-target-sm {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-target-md {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .touch-target-lg {
+    min-height: 56px;
+    min-width: 56px;
+  }
+  
+  /* Touch Feedback */
+  .touch-feedback {
+    @apply active:scale-95 active:opacity-80 transition-transform duration-100;
+  }
+  
+  /* Prevent Double-tap Zoom */
+  .touch-no-delay {
+    touch-action: manipulation;
+  }
+  
+  /* Smooth Scrolling */
+  .touch-smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Safe Area Insets */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .safe-area-inset {
+    padding: env(safe-area-inset-top) 
+             env(safe-area-inset-right) 
+             env(safe-area-inset-bottom) 
+             env(safe-area-inset-left);
+  }
 }
