@@ -1,12 +1,20 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import BottomNav from "@/components/BottomNav";
+import FamilyDashboard from "@/components/FamilyDashboard";
+import PrescriptionDetails from "@/components/PrescriptionDetails";
+import SecureLockerPickup from "@/components/SecureLockerPickup";
 
 const Index = () => {
+  const [activeScreen, setActiveScreen] = useState(1);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="max-w-md mx-auto min-h-screen relative bg-background overflow-hidden shadow-2xl">
+      <div className="overflow-y-auto min-h-screen">
+        {activeScreen === 1 && <FamilyDashboard onNavigate={setActiveScreen} />}
+        {activeScreen === 2 && <PrescriptionDetails onNavigate={setActiveScreen} />}
+        {activeScreen === 3 && <SecureLockerPickup onNavigate={setActiveScreen} />}
       </div>
+      <BottomNav activeScreen={activeScreen} onNavigate={setActiveScreen} />
     </div>
   );
 };
