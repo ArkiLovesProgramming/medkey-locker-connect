@@ -1,39 +1,56 @@
 import { useState } from "react";
 import { Search, Clock, Check, ChevronRight, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import avatarSarah from "@/assets/avatar-sarah.jpg";
-import avatarDavid from "@/assets/avatar-david.jpg";
-import avatarLily from "@/assets/avatar-lily.jpg";
+import { AvatarSVG } from "@/assets/AvatarSVG";
+import { useMedications, usePastMedications, useFamilyMembers, useRefillRequest } from "@/hooks/useData";
+import { formatDosage } from "@/utils/formatters";
 
 interface MedicineCabinetProps {
   onNavigate: (screen: number) => void;
 }
 
-const activeMeds = [
-  { name: "Amoxicillin", dose: "500mg · 1 tablet, twice daily", person: "Lily", avatar: avatarLily, nextDose: "8:00 PM", refillable: true },
-  { name: "Atorvastatin", dose: "20mg · 1 tablet, once daily", person: "David", avatar: avatarDavid, takenToday: true, refillable: true },
-  { name: "Lisinopril", dose: "10mg · 1 tablet, once daily", person: "Sarah", avatar: avatarSarah, nextDose: "9:00 AM", refillable: false },
-];
-
-const pastMeds = [
-  { name: "Ibuprofen", dose: "400mg · As needed", person: "David", ended: "Oct 2023" },
-  { name: "Cetirizine", dose: "10mg · 1 tablet daily", person: "Sarah", ended: "Aug 2023" },
-];
-
-const filters = ["All", "Sarah", "David", "Lily"];
-const avatarMap: Record<string, string> = { Sarah: avatarSarah, David: avatarDavid, Lily: avatarLily };
-
 const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("all");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { data: familyMembers } = useFamilyMembers();
+  const { data: activeMeds, isLoading: activeLoading } = useMedications(
+    selected !== "all" ? { memberId: selected } : undefined
+  );
+  const { data: pastMedsData } = usePastMedications(
+    selected !== "all" ? { memberId: selected } : undefined
+  );
+  const refillMutation = useRefillRequest();
 
-  const filteredActive = activeMeds.filter(
-    (m) => (selected === "All" || m.person === selected) && (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredActive = (activeMeds || []).filter(
+    (m) => (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  const filteredPast = pastMeds.filter(
-    (m) => (selected === "All" || m.person === selected) && (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredPast = (pastMedsData || []).filter(
+    (m) => (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const handleRefillRequest = (medicationId: string, prescriptionId: string, medicationName: string) => {
+    refillMutation.mutate(
+      { medicationId, prescriptionId },
+      {
+        onSuccess: () => {
+          toast({
+            title: "✅ Refill Requested",
+            description: `${medicationName} refill has been sent to your pharmacy.`,
+          });
+        },
+        onError: () => {
+          toast({
+            title: "❌ Error",
+            description: "Failed to request refill. Please try again.",
+          });
+        },
+      }
+    );
+  };
+
+  const filters = ["all", ...(familyMembers || []).map(m => m.id)];
+  const filterLabels: Record<string, string> = { all: "All", ...Object.fromEntries((familyMembers || []).map(m => [m.id, m.firstName])) };
 
   return (
     <div className="pb-24 px-5 pt-6">
@@ -78,10 +95,10 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                 : "bg-card text-muted-foreground border border-border hover:border-teal-dark/30"
             }`}
           >
-            {avatarMap[f] && (
-              <img src={avatarMap[f]} alt={f} className="w-5 h-5 rounded-full object-cover" />
+            {f !== "all" && (
+              <AvatarSVG name={filterLabels[f]} size={20} className="rounded-full" />
             )}
-            {f}
+            {filterLabels[f] || f}
           </button>
         ))}
       </div>
@@ -92,19 +109,23 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
           Active Prescriptions ({filteredActive.length})
         </p>
         <div className="space-y-3">
-          {filteredActive.length === 0 ? (
+          {activeLoading ? (
+            <p className="text-sm text-muted-foreground text-center py-8">Loading medications...</p>
+          ) : filteredActive.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">No active medications found.</p>
           ) : (
             filteredActive.map((med) => (
-              <div key={med.name} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
+              <div key={med.prescriptionId} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
                 <div className="flex items-start gap-3">
-                  <img src={med.avatar} alt={med.person} className="w-12 h-12 rounded-xl object-cover flex-shrink-0" />
+                  <AvatarSVG name={med.memberName} size={48} className="rounded-xl flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <p className="font-bold text-foreground text-lg">{med.name}</p>
-                      <span className="bg-teal-light text-teal-dark text-[10px] font-semibold px-2.5 py-1 rounded-full">For {med.person}</span>
+                      <span className="bg-teal-light text-teal-dark text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        For {med.memberName}
+                      </span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{med.dose}</p>
+                    <p className="text-sm text-muted-foreground">{med.strength} · {med.frequency}</p>
                     <div className="flex items-center gap-1.5 mt-2">
                       {med.takenToday ? (
                         <>
@@ -114,7 +135,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                       ) : (
                         <>
                           <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">Next dose: {med.nextDose}</span>
+                          <span className="text-xs text-muted-foreground">Next dose: {med.nextDose || 'Not scheduled'}</span>
                         </>
                       )}
                     </div>
@@ -127,15 +148,11 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                       </button>
                       {med.refillable && (
                         <button
-                          onClick={() => {
-                            toast({
-                              title: "✅ Refill Requested",
-                              description: `${med.name} refill has been sent to your pharmacy.`,
-                            });
-                          }}
-                          className="text-sm font-semibold bg-amber text-amber-fg px-4 py-1.5 rounded-full active:scale-95 transition-transform"
+                          onClick={() => handleRefillRequest(med.id, med.prescriptionId, med.name)}
+                          disabled={refillMutation.isPending}
+                          className="text-sm font-semibold bg-amber text-amber-fg px-4 py-1.5 rounded-full active:scale-95 transition-transform disabled:opacity-50"
                         >
-                          Request Refill
+                          {refillMutation.isPending ? "Requesting..." : "Request Refill"}
                         </button>
                       )}
                     </div>
@@ -156,15 +173,15 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
           ) : (
             filteredPast.map((med) => (
               <button
-                key={med.name}
-                onClick={() => toast({ title: med.name, description: `${med.dose} · Ended ${med.ended}` })}
+                key={med.prescriptionId}
+                onClick={() => toast({ title: med.name, description: `${med.strength} · Ended ${med.endDate}` })}
                 className="w-full bg-muted rounded-2xl p-4 opacity-70 hover:opacity-90 transition-opacity text-left active:scale-[0.98]"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-bold text-foreground">{med.name}</p>
-                    <p className="text-sm text-muted-foreground">{med.dose}</p>
-                    <p className="text-xs text-muted-foreground mt-1">For {med.person} · Ended {med.ended}</p>
+                    <p className="text-sm text-muted-foreground">{med.strength} · {med.frequency}</p>
+                    <p className="text-xs text-muted-foreground mt-1">For {med.memberName} · Ended {med.endDate}</p>
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                 </div>

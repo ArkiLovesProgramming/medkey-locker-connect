@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
-
 @layer base {
   :root {
+    /* MEDkey Brand Colors - Extracted from logo */
+    --brand-teal-dark: 188 50% 36%;    /* #2D7A8A - Logo "MED" */
+    --brand-teal-light: 188 50% 60%;   /* #5EC4D6 - Logo "key" */
+
+    /* Background & Surface Colors */
     --background: 40 20% 97%;
     --foreground: 192 50% 10%;
 
@@ -15,52 +20,116 @@
     --popover: 0 0% 100%;
     --popover-foreground: 192 50% 10%;
 
-    --primary: 192 60% 18%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary - Using MEDkey Teal Dark */
+    --primary: 188 50% 36%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 180 30% 95%;
-    --secondary-foreground: 192 60% 18%;
+    /* Secondary - Light Teal Tint */
+    --secondary: 188 50% 95%;
+    --secondary-foreground: 188 50% 36%;
 
+    /* Muted - Warm Gray */
     --muted: 40 15% 93%;
     --muted-foreground: 220 10% 46%;
 
-    --accent: 45 96% 58%;
-    --accent-foreground: 192 60% 12%;
+    /* Accent - Using MEDkey Teal Light */
+    --accent: 188 50% 60%;
+    --accent-foreground: 188 50% 20%;
 
+    /* Status Colors */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 192 60% 18%;
-
-    --radius: 1rem;
-
-    /* Custom MEDkey tokens */
-    --teal-dark: 192 60% 18%;
-    --teal-mid: 180 42% 38%;
-    --teal-light: 180 40% 95%;
-    --teal-icon: 174 50% 42%;
-
-    --warning: 25 95% 53%;
-    --warning-light: 30 100% 96%;
-    --warning-foreground: 20 80% 30%;
 
     --success: 152 60% 42%;
     --success-light: 150 50% 95%;
     --success-foreground: 152 60% 20%;
 
+    --warning: 25 95% 53%;
+    --warning-light: 30 100% 96%;
+    --warning-foreground: 20 80% 30%;
+
+    --info: 188 50% 60%;
+    --info-light: 188 50% 95%;
+    --info-foreground: 188 50% 20%;
+
+    /* Borders & Inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 188 50% 36%;
+
+    /* Radius */
+    --radius: 1rem;
+
+    /* Legacy MEDkey tokens (kept for backward compatibility) */
+    --teal-dark: 188 50% 36%;
+    --teal-mid: 180 42% 38%;
+    --teal-light: 180 40% 95%;
+    --teal-icon: 174 50% 42%;
+
     --amber: 45 96% 58%;
     --amber-foreground: 35 80% 18%;
 
+    /* Sidebar Colors */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary: 188 50% 36%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-accent: 188 50% 95%;
+    --sidebar-accent-foreground: 188 50% 36%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 188 50% 36%;
+  }
+
+  /* Dark Mode Colors */
+  .dark {
+    --background: 220 40% 8%;
+    --foreground: 220 20% 90%;
+
+    --card: 220 35% 12%;
+    --card-foreground: 220 20% 90%;
+
+    --popover: 220 35% 12%;
+    --popover-foreground: 220 20% 90%;
+
+    --primary: 188 50% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 188 40% 20%;
+    --secondary-foreground: 188 50% 60%;
+
+    --muted: 220 30% 15%;
+    --muted-foreground: 220 20% 70%;
+
+    --accent: 188 50% 50%;
+    --accent-foreground: 188 50% 15%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 152 50% 45%;
+    --success-light: 150 40% 20%;
+    --success-foreground: 152 50% 85%;
+
+    --warning: 25 90% 55%;
+    --warning-light: 25 80% 20%;
+    --warning-foreground: 25 90% 85%;
+
+    --info: 188 50% 55%;
+    --info-light: 188 40% 20%;
+    --info-foreground: 188 50% 85%;
+
+    --border: 220 30% 20%;
+    --input: 220 30% 20%;
+    --ring: 188 50% 45%;
+
+    --sidebar-background: 220 35% 10%;
+    --sidebar-foreground: 220 20% 90%;
+    --sidebar-primary: 188 50% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 188 40% 20%;
+    --sidebar-accent-foreground: 188 50% 60%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 188 50% 45%;
   }
 }
 
@@ -76,6 +145,38 @@
 }
 
 @layer utilities {
+  /* MEDkey Brand Color Utilities */
+  .text-brand-teal-dark {
+    color: hsl(var(--brand-teal-dark));
+  }
+  .bg-brand-teal-dark {
+    background-color: hsl(var(--brand-teal-dark));
+  }
+  .border-brand-teal-dark {
+    border-color: hsl(var(--brand-teal-dark));
+  }
+  .text-brand-teal-light {
+    color: hsl(var(--brand-teal-light));
+  }
+  .bg-brand-teal-light {
+    background-color: hsl(var(--brand-teal-light));
+  }
+  .border-brand-teal-light {
+    border-color: hsl(var(--brand-teal-light));
+  }
+
+  /* Gradient Utilities */
+  .bg-gradient-medkey {
+    background: linear-gradient(135deg, hsl(var(--brand-teal-dark)) 0%, hsl(var(--brand-teal-light)) 100%);
+  }
+  .bg-gradient-medkey-subtle {
+    background: linear-gradient(135deg, hsl(var(--brand-teal-dark)) 0%, hsl(188 50% 45%) 100%);
+  }
+  .bg-gradient-medkey-light {
+    background: linear-gradient(135deg, hsl(188 50% 95%) 0%, hsl(188 50% 60%) 100%);
+  }
+
+  /* Legacy Teal Utilities */
   .text-teal-dark {
     color: hsl(var(--teal-dark));
   }
@@ -94,6 +195,8 @@
   .bg-teal-icon {
     background-color: hsl(var(--teal-icon));
   }
+
+  /* Status Color Utilities */
   .text-warning {
     color: hsl(var(--warning));
   }
@@ -106,10 +209,132 @@
   .bg-success-light {
     background-color: hsl(var(--success-light));
   }
+  .text-info {
+    color: hsl(var(--info));
+  }
+  .bg-info-light {
+    background-color: hsl(var(--info-light));
+  }
   .bg-amber {
     background-color: hsl(var(--amber));
   }
   .text-amber-fg {
     color: hsl(var(--amber-foreground));
+  }
+
+  /* Shadow Utilities - MEDkey Theme */
+  .shadow-medkey-sm {
+    box-shadow: 0 1px 2px rgba(45, 122, 138, 0.05);
+  }
+  .shadow-medkey-md {
+    box-shadow: 0 2px 8px rgba(45, 122, 138, 0.08);
+  }
+  .shadow-medkey-lg {
+    box-shadow: 0 4px 16px rgba(45, 122, 138, 0.12);
+  }
+  .shadow-medkey-xl {
+    box-shadow: 0 8px 32px rgba(45, 122, 138, 0.16);
+  }
+  .shadow-medkey-glow {
+    box-shadow: 0 0 24px rgba(94, 196, 214, 0.3);
+  }
+
+  /* Dark mode shadows */
+  .dark .shadow-medkey-sm {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  .dark .shadow-medkey-md {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  .dark .shadow-medkey-lg {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+  .dark .shadow-medkey-xl {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Spacing Utilities - 4px Grid System */
+  .space-medkey-1 { --medkey-space: 4px; }
+  .space-medkey-2 { --medkey-space: 8px; }
+  .space-medkey-3 { --medkey-space: 12px; }
+  .space-medkey-4 { --medkey-space: 16px; }
+  .space-medkey-5 { --medkey-space: 20px; }
+  .space-medkey-6 { --medkey-space: 24px; }
+  .space-medkey-8 { --medkey-space: 32px; }
+  .space-medkey-10 { --medkey-space: 40px; }
+  .space-medkey-12 { --medkey-space: 48px; }
+  .space-medkey-16 { --medkey-space: 64px; }
+
+  /* Border Radius Utilities */
+  .radius-medkey-sm {
+    border-radius: 4px;
+  }
+  .radius-medkey-md {
+    border-radius: 8px;
+  }
+  .radius-medkey-lg {
+    border-radius: 12px;
+  }
+  .radius-medkey-xl {
+    border-radius: 16px;
+  }
+  .radius-medkey-2xl {
+    border-radius: 24px;
+  }
+  .radius-medkey-full {
+    border-radius: 9999px;
+  }
+
+  /* Animation Utilities */
+  .transition-medkey-fast {
+    transition: all 150ms ease-out;
+  }
+  .transition-medkey-normal {
+    transition: all 200ms ease-out;
+  }
+  .transition-medkey-slow {
+    transition: all 300ms ease-out;
+  }
+
+  /* Interactive States */
+  .btn-hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-0.5 active:scale-95;
+  }
+  .card-hover-elevate {
+    @apply transition-shadow duration-200 hover:shadow-medkey-lg;
+  }
+
+  /* Typography Utilities */
+  .text-medkey-h1 {
+    @apply text-3xl md:text-4xl font-bold leading-tight;
+  }
+  .text-medkey-h2 {
+    @apply text-2xl md:text-3xl font-bold leading-snug;
+  }
+  .text-medkey-h3 {
+    @apply text-xl md:text-2xl font-semibold leading-snug;
+  }
+  .text-medkey-h4 {
+    @apply text-lg md:text-xl font-semibold leading-normal;
+  }
+  .text-medkey-body-lg {
+    @apply text-base leading-relaxed;
+  }
+  .text-medkey-body {
+    @apply text-sm leading-relaxed;
+  }
+  .text-medkey-caption {
+    @apply text-xs leading-normal;
+  }
+  .text-medkey-tiny {
+    @apply text-[10px] leading-tight;
+  }
+
+  /* Focus States */
+  .focus-medkey {
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-teal-light focus:ring-offset-2;
+  }
+  .dark .focus-medkey {
+    @apply focus:ring-offset-background;
   }
 }
