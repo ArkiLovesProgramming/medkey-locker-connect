@@ -2,6 +2,10 @@
 // User & Family Types
 // ============================================================================
 
+export interface UserPreferences {
+  homePharmacyId?: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -11,6 +15,7 @@ export interface User {
   dateOfBirth?: string;
   avatar?: string;
   role: 'primary' | 'member';
+  preferences?: UserPreferences;
   createdAt: string;
 }
 
@@ -27,6 +32,21 @@ export interface InsuranceInfo {
   memberId: string;
   groupNumber?: string;
   coverageType: 'primary' | 'secondary';
+  // Extended fields for detailed insurance information
+  clientName?: string;
+  relationship?: 'self' | 'spouse' | 'child' | 'parent' | 'other';
+  cardholderGroupId?: string;
+  effectiveDate?: string;
+  expirationDate?: string;
+  copayPrimary?: number;
+  copaySpecialist?: number;
+  deductible?: number;
+  outOfPocketMax?: number;
+  rxGroup?: string;
+  rxPCN?: string;
+  bin?: string;
+  customerServicePhone?: string;
+  website?: string;
 }
 
 export interface Allergy {

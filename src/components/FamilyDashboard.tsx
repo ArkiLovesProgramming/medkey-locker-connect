@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronRight, CheckCircle, AlertCircle, Clock, Check, Bell } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { AvatarWithImage } from "@/assets/AvatarSVG";
+import { AvatarSVG, AvatarWithImage } from "@/assets/AvatarSVG";
 import { useFamilyMembers, usePrescriptionsNeedingApproval, useMedications, useDashboardData } from "@/hooks/useData";
 import { formatRelativeTime } from "@/utils/formatters";
 import { PRESCRIPTION_STATUS } from "@/utils/constants";
@@ -16,12 +16,6 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
   const { data: activeMeds } = useMedications(selectedMember !== "all" ? { memberId: selectedMember } : undefined);
   const { data: pendingPrescriptions } = usePrescriptionsNeedingApproval();
   const { data: dashboardData } = useDashboardData();
-
-  // Helper to get avatar URL by member name
-  const getAvatarUrl = (memberName: string) => {
-    const member = familyMembers?.find(m => m.firstName === memberName);
-    return member?.avatar;
-  };
 
   if (membersLoading) {
     return (
@@ -43,42 +37,43 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
         <h1 className="text-2xl font-bold text-foreground">Family Dashboard</h1>
         <button
           onClick={() => onNavigate(6)}
-          className="w-11 h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform overflow-hidden"
+          className="w-11 h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform"
         >
-          <AvatarWithImage
-            imageUrl={familyMembers?.find(m => m.id === 'user-001')?.avatar}
-            alt="Sarah Jenkins"
-            size={44}
-            className="w-11 h-11"
-          />
+          <span className="text-sm font-semibold text-teal-dark">SJ</span>
         </button>
       </div>
 
       {/* Family Members */}
       <div className="mb-6">
         <p className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">Family Members</p>
-        <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
-          {displayMembers.map((m) => (
-            <button
-              key={m.id}
-              onClick={() => setSelectedMember(m.id)}
-              className="flex flex-col items-center flex-shrink-0 group"
-            >
-              <AvatarWithImage
-                imageUrl={(m as any).avatar}
-                alt={`${m.firstName} ${m.lastName}`}
-                size={64}
-                className={`rounded-2xl transition-all duration-200 active:scale-95 ${
-                  selectedMember === m.id
-                    ? "ring-3 ring-teal-dark ring-offset-2"
-                    : "opacity-70 group-hover:opacity-100"
-                }`}
-              />
-              <span className={`text-xs mt-1.5 font-medium transition-colors ${
-                selectedMember === m.id ? "text-teal-dark" : "text-muted-foreground"
-              }`}>{m.firstName}</span>
-            </button>
-          ))}
+        <div className="relative">
+          {/* Left fade indicator */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none opacity-0" />
+          {/* Right fade indicator - always visible to hint scrollability */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" style={{ scrollSnapType: 'x-mandatory' }}>
+            {displayMembers.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setSelectedMember(m.id)}
+                className="flex flex-col items-center flex-shrink-0 group touch-feedback touch-no-delay"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                <AvatarSVG
+                  name={`${m.firstName} ${m.lastName}`}
+                  size={64}
+                  className={`rounded-2xl transition-all duration-200 active:scale-95 ${
+                    selectedMember === m.id
+                      ? "ring-3 ring-teal-dark ring-offset-2"
+                      : "opacity-70 group-hover:opacity-100"
+                  }`}
+                />
+                <span className={`text-xs mt-1.5 font-medium transition-colors ${
+                  selectedMember === m.id ? "text-teal-dark" : "text-muted-foreground"
+                }`}>{m.firstName}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -131,9 +126,8 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
               className="w-full bg-card rounded-2xl p-4 shadow-sm mb-3 text-left active:scale-[0.98] transition-transform duration-150"
             >
               <div className="flex items-start gap-3">
-                <AvatarWithImage
-                  imageUrl={getAvatarUrl(med.memberName)}
-                  alt={med.memberName}
+                <AvatarSVG
+                  name={med.memberName}
                   size={48}
                   className="rounded-xl flex-shrink-0"
                 />

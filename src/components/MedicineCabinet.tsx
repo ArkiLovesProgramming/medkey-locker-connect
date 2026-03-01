@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search, Clock, Check, ChevronRight, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { AvatarWithImage } from "@/assets/AvatarSVG";
+import { AvatarSVG } from "@/assets/AvatarSVG";
 import { useMedications, usePastMedications, useFamilyMembers, useRefillRequest } from "@/hooks/useData";
 import { formatDosage } from "@/utils/formatters";
 
@@ -28,12 +28,6 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
   const filteredPast = (pastMedsData || []).filter(
     (m) => (!searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-
-  // Helper to get avatar URL by member name
-  const getAvatarUrl = (memberName: string) => {
-    const member = familyMembers?.find(m => m.firstName === memberName);
-    return member?.avatar;
-  };
 
   const handleRefillRequest = (medicationId: string, prescriptionId: string, medicationName: string) => {
     refillMutation.mutate(
@@ -90,28 +84,28 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
       </div>
 
       {/* Filter Pills */}
-      <div className="flex gap-2 overflow-x-auto pb-4 -mx-1 px-1">
-        {filters.map((f) => (
-          <button
-            key={f}
-            onClick={() => setSelected(f)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 ${
-              selected === f
-                ? "bg-teal-dark text-primary-foreground shadow-md"
-                : "bg-card text-muted-foreground border border-border hover:border-teal-dark/30"
-            }`}
-          >
-            {f !== "all" && (
-              <AvatarWithImage
-                imageUrl={familyMembers?.find(m => m.id === f)?.avatar}
-                alt={filterLabels[f] || f}
-                size={20}
-                className="rounded-full"
-              />
-            )}
-            {filterLabels[f] || f}
-          </button>
-        ))}
+      <div className="relative mb-2">
+        {/* Right fade indicator */}
+        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="flex gap-2 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" style={{ scrollSnapType: 'x-mandatory' }}>
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => setSelected(f)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay ${
+                selected === f
+                  ? "bg-teal-dark text-primary-foreground shadow-md"
+                  : "bg-card text-muted-foreground border border-border hover:border-teal-dark/30"
+              }`}
+              style={{ scrollSnapAlign: 'start' }}
+            >
+              {f !== "all" && (
+                <AvatarSVG name={filterLabels[f]} size={20} className="rounded-full" />
+              )}
+              {filterLabels[f] || f}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Active Prescriptions */}
@@ -128,12 +122,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             filteredActive.map((med) => (
               <div key={med.prescriptionId} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
                 <div className="flex items-start gap-3">
-                  <AvatarWithImage
-                    imageUrl={getAvatarUrl(med.memberName)}
-                    alt={med.memberName}
-                    size={48}
-                    className="rounded-xl flex-shrink-0"
-                  />
+                  <AvatarSVG name={med.memberName} size={48} className="rounded-xl flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <p className="font-bold text-foreground text-lg">{med.name}</p>

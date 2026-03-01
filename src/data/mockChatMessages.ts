@@ -7,7 +7,7 @@ export const pharmacists: Record<string, Pharmacist> = {
     name: 'Michael Chen',
     title: 'Clinical Pharmacist',
     credentials: 'PharmD, BCPS',
-    avatar: 'https://i.pravatar.cc/400?img=52', // Asian male healthcare professional
+    avatar: undefined, // Use SVG avatar
     isOnline: true,
     specialty: 'General Practice',
   },
@@ -16,7 +16,7 @@ export const pharmacists: Record<string, Pharmacist> = {
     name: 'Emily Rodriguez',
     title: 'Senior Pharmacist',
     credentials: 'PharmD, RPh',
-    avatar: 'https://i.pravatar.cc/400?img=44', // Hispanic female healthcare professional
+    avatar: undefined, // Use SVG avatar
     isOnline: false,
     specialty: 'Pediatrics',
   },
@@ -25,7 +25,7 @@ export const pharmacists: Record<string, Pharmacist> = {
     name: 'James Thompson',
     title: 'Pharmacist',
     credentials: 'RPh, CDE',
-    avatar: 'https://i.pravatar.cc/400?img=13', // Male healthcare professional
+    avatar: undefined, // Use SVG avatar
     isOnline: true,
     specialty: 'Diabetes Care',
   },

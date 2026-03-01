@@ -14,6 +14,19 @@ export {
   getMemberById,
   getMemberByName,
   getAllFamilyMembers,
+  getUserPreferences,
+  setUserHomePharmacy,
+  getHomePharmacyId,
+  // New exports for family management
+  insurancePlans,
+  commonAllergies,
+  commonMedicalConditions,
+  addFamilyMember,
+  updateFamilyMember,
+  removeFamilyMember,
+  searchFamilyMembers,
+  getMembersByRelationship,
+  getPrimaryMember,
 } from './mockUsers';
 
 // Medications
@@ -161,6 +174,18 @@ export {
   searchAppointments,
   getAppointmentReminders,
 } from './mockAppointments';
+
+// Insurance Cards
+export {
+  insuranceCards,
+  getInsuranceCardById,
+  getInsuranceCardsByMemberId,
+  getActiveInsuranceCards,
+  getPrimaryInsuranceCard,
+  getInsuranceCardsByProvider,
+  isCardExpired,
+  getCardsExpiringSoon,
+} from './mockInsuranceCards';
 
 // Dashboard Data Helper
 import { DashboardData, ActivityItem, ActionItem } from '@/types';

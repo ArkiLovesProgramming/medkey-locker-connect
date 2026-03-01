@@ -9,7 +9,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6789',
     email: 'j.wilson@springfieldfm.com',
     npi: '1234567890',
-    avatar: 'https://i.pravatar.cc/400?img=21', // Male doctor, family medicine
+    avatar: undefined, // Use SVG avatar
   },
   'dr-patel': {
     id: 'dr-002',
@@ -18,7 +18,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6790',
     email: 'p.patel@springfieldpeds.com',
     npi: '2345678901',
-    avatar: 'https://i.pravatar.cc/400?img=38', // Female pediatrician
+    avatar: undefined, // Use SVG avatar
   },
   'dr-chen': {
     id: 'dr-003',
@@ -27,7 +27,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6791',
     email: 'r.chen@springfieldcardio.com',
     npi: '3456789012',
-    avatar: 'https://i.pravatar.cc/400?img=60', // Male cardiologist
+    avatar: undefined, // Use SVG avatar
   },
   'dr-martinez': {
     id: 'dr-004',
@@ -36,7 +36,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6792',
     email: 'm.martinez@springfieldendo.com',
     npi: '4567890123',
-    avatar: 'https://i.pravatar.cc/400?img=49', // Female endocrinologist
+    avatar: undefined, // Use SVG avatar
   },
   'dr-thompson': {
     id: 'dr-005',
@@ -45,7 +45,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6793',
     email: 'j.thompson@springfieldallergy.com',
     npi: '5678901234',
-    avatar: 'https://i.pravatar.cc/400?img=41', // Female allergist
+    avatar: undefined, // Use SVG avatar
   },
   'dr-kim': {
     id: 'dr-006',
@@ -54,7 +54,7 @@ export const healthcareProviders: Record<string, Provider> = {
     phone: '+1 (555) 345-6794',
     email: 's.kim@springfieldwomenshealth.com',
     npi: '6789012345',
-    avatar: 'https://i.pravatar.cc/400?img=47', // Female OB/GYN
+    avatar: undefined, // Use SVG avatar
   },
 };
 

@@ -5,6 +5,9 @@ import {
   getMemberById,
   getMemberByName,
   getAllFamilyMembers,
+  addFamilyMember as addMemberToMock,
+  updateFamilyMember as updateMemberInMock,
+  removeFamilyMember as removeMemberFromMock,
 } from '@/data/mockUsers';
 import { notifications, markNotificationAsRead, markAllNotificationsAsRead } from '@/data/mockNotifications';
 
@@ -77,7 +80,12 @@ class UserService extends BaseApiService {
           throw new Error('User not found');
         }
         
-        // In a real app, this would update the user data
+        // Update in mock data
+        const updated = updateMemberInMock(userId, updates);
+        if (!updated) {
+          throw new Error('Failed to update user');
+        }
+        
         return { success: true };
       },
       'Failed to update user profile'
@@ -92,11 +100,12 @@ class UserService extends BaseApiService {
       async () => {
         await simulateNetworkDelay(1500, 2000);
         
-        const memberId = `user-${Date.now()}`;
+        // Add to mock data
+        const newMember = addMemberToMock(memberData);
         
         return {
           success: true,
-          memberId,
+          memberId: newMember.id,
         };
       },
       'Failed to add family member'
@@ -120,6 +129,12 @@ class UserService extends BaseApiService {
           throw new Error('Cannot remove primary account holder');
         }
         
+        // Remove from mock data
+        const removed = removeMemberFromMock(memberId);
+        if (!removed) {
+          throw new Error('Failed to remove member');
+        }
+        
         return { success: true };
       },
       'Failed to remove family member'
@@ -137,6 +152,14 @@ class UserService extends BaseApiService {
         const user = getMemberById(userId);
         if (!user) {
           throw new Error('User not found');
+        }
+        
+        // Update in mock data
+        const updated = updateMemberInMock(userId, { 
+          insuranceInfo: { ...user.insuranceInfo, ...insuranceData } 
+        });
+        if (!updated) {
+          throw new Error('Failed to update insurance');
         }
         
         return { success: true };

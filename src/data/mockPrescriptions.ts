@@ -10,7 +10,7 @@ export const prescribers: Record<string, Prescriber> = {
     phone: '+1 (555) 345-6789',
     address: '123 Medical Plaza, Suite 200, Springfield, IL 62701',
     npi: '1234567890',
-    avatar: 'https://i.pravatar.cc/400?img=21', // Male doctor, family medicine
+    avatar: undefined, // Use SVG avatar
   },
   'dr-patel': {
     id: 'dr-002',
@@ -19,7 +19,7 @@ export const prescribers: Record<string, Prescriber> = {
     phone: '+1 (555) 345-6790',
     address: '456 Children Way, Suite 100, Springfield, IL 62702',
     npi: '2345678901',
-    avatar: 'https://i.pravatar.cc/400?img=38', // Female pediatrician
+    avatar: undefined, // Use SVG avatar
   },
   'dr-chen': {
     id: 'dr-003',
@@ -28,7 +28,7 @@ export const prescribers: Record<string, Prescriber> = {
     phone: '+1 (555) 345-6791',
     address: '789 Heart Drive, Suite 300, Springfield, IL 62703',
     npi: '3456789012',
-    avatar: 'https://i.pravatar.cc/400?img=60', // Male cardiologist
+    avatar: undefined, // Use SVG avatar
   },
   'dr-martinez': {
     id: 'dr-004',
@@ -37,7 +37,7 @@ export const prescribers: Record<string, Prescriber> = {
     phone: '+1 (555) 345-6792',
     address: '321 Diabetes Lane, Suite 150, Springfield, IL 62704',
     npi: '4567890123',
-    avatar: 'https://i.pravatar.cc/400?img=49', // Female endocrinologist
+    avatar: undefined, // Use SVG avatar
   },
 };
 
@@ -56,6 +56,48 @@ export const pharmacies: Record<string, Pharmacy> = {
     address: '888 West Avenue, Springfield, IL 62702',
     phone: '+1 (555) 456-7891',
     hours: 'Mon-Sun: 8AM-10PM',
+  },
+  'medkey-north': {
+    id: 'pharm-003',
+    name: 'MEDkey Pharmacy - Northgate',
+    address: '1200 Northgate Plaza, Springfield, IL 62703',
+    phone: '+1 (555) 456-7892',
+    hours: 'Mon-Sat: 9AM-8PM, Sun: 11AM-5PM',
+  },
+  'medkey-east': {
+    id: 'pharm-004',
+    name: 'MEDkey Pharmacy - Eastside',
+    address: '3456 East Boulevard, Springfield, IL 62704',
+    phone: '+1 (555) 456-7893',
+    hours: 'Mon-Fri: 8AM-9PM, Sat-Sun: 9AM-7PM',
+  },
+  'medkey-downtown': {
+    id: 'pharm-005',
+    name: 'MEDkey Pharmacy - Downtown',
+    address: '789 Central Avenue, Suite 101, Springfield, IL 62701',
+    phone: '+1 (555) 456-7894',
+    hours: 'Mon-Fri: 7AM-10PM, Sat-Sun: 8AM-8PM',
+  },
+  'medkey-riverdale': {
+    id: 'pharm-006',
+    name: 'MEDkey Pharmacy - Riverdale',
+    address: '2100 River Road, Springfield, IL 62705',
+    phone: '+1 (555) 456-7895',
+    hours: 'Mon-Sun: 9AM-9PM',
+  },
+  'medkey-oakwood': {
+    id: 'pharm-007',
+    name: 'MEDkey Pharmacy - Oakwood',
+    address: '567 Oak Street, Springfield, IL 62706',
+    phone: '+1 (555) 456-7896',
+    hours: 'Mon-Fri: 9AM-7PM, Sat: 10AM-4PM, Sun: Closed',
+  },
+  'medkey-lakeside': {
+    id: 'pharm-008',
+    name: 'MEDkey Pharmacy - Lakeside',
+    address: '890 Lakeview Drive, Springfield, IL 62707',
+    phone: '+1 (555) 456-7897',
+    hours: 'Mon-Sat: 8AM-8PM, Sun: 10AM-6PM',
   },
 };
 

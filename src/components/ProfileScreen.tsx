@@ -1,10 +1,14 @@
 import {
   Users, CreditCard, Wallet, Lock, Bell, ShieldCheck,
-  HelpCircle, LogOut, ChevronRight, Sparkles,
+  HelpCircle, LogOut, ChevronRight, Sparkles, Home,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { AvatarWithImage } from "@/assets/AvatarSVG";
-import { useFamilyMembers } from "@/hooks/useData";
+import { useNavigate } from "react-router-dom";
+import { getPrimaryInsuranceCard } from "@/data/mockInsuranceCards";
+import { useState } from "react";
+import HomePharmacySelector from "./HomePharmacySelector";
+import { getHomePharmacyId, setUserHomePharmacy, familyMembers } from "@/data/mockUsers";
+import { pharmacies } from "@/data/mockPrescriptions";
 
 interface ProfileScreenProps {
   onNavigate: (screen: number) => void;
@@ -14,8 +18,9 @@ const menuGroups = [
   {
     title: "Account",
     items: [
-      { icon: Users, label: "Family Management", detail: "3 Members" },
+      { icon: Users, label: "Family Management", detailKey: "familyCount" },
       { icon: CreditCard, label: "Insurance Cards", detail: "Blue Cross" },
+      { icon: Home, label: "Home Pharmacy", detailKey: "pharmacy" },
       { icon: Wallet, label: "Payment Methods" },
     ],
   },
@@ -37,15 +42,52 @@ const menuGroups = [
 ];
 
 const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
-  const { data: familyMembers } = useFamilyMembers();
-  const primaryUser = familyMembers?.find(m => m.role === 'primary');
+  const navigate = useNavigate();
+  const [isPharmacySelectorOpen, setIsPharmacySelectorOpen] = useState(false);
+  const [pharmacyId, setPharmacyId] = useState<string | undefined>(getHomePharmacyId('user-001'));
   
+  // Get current home pharmacy for the primary user (user-001)
+  const currentPharmacy = pharmacyId ? pharmacies[pharmacyId] : undefined;
+
   const handleMenuClick = (label: string, danger?: boolean) => {
     if (danger) {
       toast({ title: "👋 Logging Out", description: "You have been logged out successfully." });
+    } else if (label === "Insurance Cards") {
+      // Navigate to insurance card detail page
+      const primaryCard = getPrimaryInsuranceCard();
+      if (primaryCard) {
+        navigate(`/insurance-card/${primaryCard.id}`);
+      } else {
+        toast({ title: "No Insurance Cards", description: "No active insurance cards found." });
+      }
+    } else if (label === "Family Management") {
+      // Navigate to family management page
+      navigate('/family-management');
+    } else if (label === "Home Pharmacy") {
+      // Open pharmacy selector modal
+      setIsPharmacySelectorOpen(true);
     } else {
       toast({ title: label, description: `Opening ${label}...` });
     }
+  };
+
+  const handleSavePharmacy = (pharmacyId: string) => {
+    // Save the pharmacy preference for the primary user
+    setUserHomePharmacy('user-001', pharmacyId);
+    // Update local state to trigger re-render
+    setPharmacyId(pharmacyId);
+  };
+
+  const getPharmacyDetail = () => {
+    if (currentPharmacy) {
+      // Return short name for display
+      return currentPharmacy.name.replace('MEDkey Pharmacy - ', '');
+    }
+    return "Not set";
+  };
+
+  const getFamilyCountDetail = () => {
+    return `${familyMembers.length} Members`;
   };
 
   return (
@@ -56,17 +98,12 @@ const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
       <div className="flex flex-col items-center mb-5">
         <button
           onClick={() => toast({ title: "📸 Change Photo", description: "Profile photo upload coming soon." })}
-          className="w-20 h-20 rounded-full bg-teal-light flex items-center justify-center border-2 border-border mb-3 active:scale-95 transition-transform overflow-hidden"
+          className="w-20 h-20 rounded-full bg-teal-light flex items-center justify-center border-2 border-border mb-3 active:scale-95 transition-transform"
         >
-          <AvatarWithImage
-            imageUrl={primaryUser?.avatar}
-            alt={primaryUser?.firstName || 'User'}
-            size={80}
-            className="w-20 h-20"
-          />
+          <span className="text-xl font-bold text-teal-dark">SJ</span>
         </button>
-        <p className="text-lg font-bold text-foreground">{primaryUser ? `${primaryUser.firstName} ${primaryUser.lastName}` : 'Sarah Jenkins'}</p>
-        <p className="text-sm text-muted-foreground">{primaryUser?.email || 'sarah.jenkins@email.com'}</p>
+        <p className="text-lg font-bold text-foreground">Sarah Jenkins</p>
+        <p className="text-sm text-muted-foreground">sarah.jenkins@email.com</p>
       </div>
 
       {/* Premium Banner */}
@@ -99,6 +136,8 @@ const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
                   <item.icon className={`w-5 h-5 flex-shrink-0 ${item.danger ? "text-destructive" : "text-teal-dark"}`} />
                   <span className={`flex-1 text-sm font-medium ${item.danger ? "text-destructive" : "text-foreground"}`}>{item.label}</span>
                   {item.detail && <span className="text-xs text-muted-foreground mr-1">{item.detail}</span>}
+                  {item.detailKey === "pharmacy" && <span className="text-xs text-muted-foreground mr-1">{getPharmacyDetail()}</span>}
+                  {item.detailKey === "familyCount" && <span className="text-xs text-muted-foreground mr-1">{getFamilyCountDetail()}</span>}
                   {!item.danger && <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
                 </button>
               ))}
@@ -106,6 +145,14 @@ const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
           </div>
         ))}
       </div>
+
+      {/* Home Pharmacy Selector Modal */}
+      <HomePharmacySelector
+        isOpen={isPharmacySelectorOpen}
+        onClose={() => setIsPharmacySelectorOpen(false)}
+        onSave={handleSavePharmacy}
+        currentPharmacyId={pharmacyId}
+      />
     </div>
   );
 };

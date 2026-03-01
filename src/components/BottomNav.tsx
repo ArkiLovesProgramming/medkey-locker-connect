@@ -60,26 +60,47 @@ const BottomNav = ({ activeScreen, onNavigate }: BottomNavProps) => {
             key={item.label}
             onClick={() => onNavigate(item.screen)}
             className={cn(
-              "flex flex-col items-center",
-              "py-3 px-4 touch-target-md",
-              "touch-feedback transition-medkey-normal"
+              "flex flex-col items-center justify-center",
+              "py-2 px-3 mx-1 rounded-xl",
+              "touch-target-md touch-feedback transition-medkey-normal",
+              "relative"
             )}
           >
-            <item.icon className={cn(
-              "w-6 h-6 transition-colors duration-200",
-              activeScreen === item.screen 
-                ? "text-brand-teal-dark" 
-                : "text-muted-foreground"
-            )} />
-            <span className={cn(
-              "text-[11px] mt-1 font-semibold",
-              "transition-colors",
-              activeScreen === item.screen 
-                ? "text-brand-teal-dark" 
-                : "text-muted-foreground"
-            )}>
-              {item.label}
-            </span>
+            {/* 选中状态背景 */}
+            {activeScreen === item.screen && (
+              <div className={cn(
+                "absolute inset-0 rounded-xl",
+                "bg-brand-teal-light/10",
+                "-inset-x-1"
+              )} />
+            )}
+            
+            {/* 图标和文字容器 */}
+            <div className="relative flex flex-col items-center">
+              <item.icon className={cn(
+                "w-6 h-6 transition-all duration-200",
+                activeScreen === item.screen 
+                  ? "text-brand-teal-dark scale-110" 
+                  : "text-muted-foreground scale-100"
+              )} />
+              <span className={cn(
+                "text-[11px] mt-1 font-bold",
+                "transition-all duration-200",
+                activeScreen === item.screen 
+                  ? "text-brand-teal-dark" 
+                  : "text-muted-foreground"
+              )}>
+                {item.label}
+              </span>
+              {/* 选中指示器 */}
+              {activeScreen === item.screen && (
+                <div className={cn(
+                  "absolute -bottom-1 left-1/2 -translate-x-1/2",
+                  "w-1 h-1 rounded-full",
+                  "bg-brand-teal-dark"
+                )} />
+              )}
+            </div>
           </button>
         )
       )}

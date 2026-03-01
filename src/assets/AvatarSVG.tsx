@@ -34,19 +34,21 @@ export const AvatarSVG: React.FC<AvatarSVGProps> = ({
     ];
 
     let hash = 0;
-    for (let i = 0; i < nameStr.length; i++) {
-      hash = nameStr.charCodeAt(i) + ((hash << 5) - hash);
+    const safeNameStr = nameStr || '';
+    for (let i = 0; i < safeNameStr.length; i++) {
+      hash = safeNameStr.charCodeAt(i) + ((hash << 5) - hash);
     }
 
     const index = Math.abs(hash) % colorPalettes.length;
     return colorPalettes[index];
   };
 
-  const selectedColors = colors || getColors(name);
+  const selectedColors = colors || getColors(name || 'User');
 
   // Get initials
   const getInitials = (nameStr: string) => {
-    const parts = nameStr.trim().split(/\s+/);
+    const safeNameStr = nameStr || 'User';
+    const parts = safeNameStr.trim().split(/\s+/);
     if (parts.length === 1) {
       return parts[0].substring(0, 2).toUpperCase();
     }
@@ -69,8 +71,9 @@ export const AvatarSVG: React.FC<AvatarSVGProps> = ({
       {/* Optional decorative elements based on name hash */}
       {(() => {
         let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-          hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        const safeName = name || 'User';
+        for (let i = 0; i < safeName.length; i++) {
+          hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
         }
         const pattern = Math.abs(hash) % 5;
 

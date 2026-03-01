@@ -11,20 +11,19 @@ interface PharmacistChatProps {
 }
 
 const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
-  const [inputValue, setInputValue] = useState("");
   const { data: user } = useUserProfile();
   const { data: conversations } = useChatConversations();
   const { data: quickRepliesData } = useQuickReplies();
   
   // Use first conversation or default to chat-001
   const activeChatId = conversations && conversations.length > 0 ? conversations[0].id : "chat-001";
-  const { messages, conversation, isTyping, sendMessage, sendQuickReply, handleSubmit, messagesEndRef } = useChat({
+  const { messages, conversation, isTyping, sendMessage, sendQuickReply, handleSubmit, messagesEndRef, inputValue, setInputValue } = useChat({
     chatId: activeChatId,
     userId: user?.id || "user-001",
   });
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-background">
       {/* Header - Fixed at top */}
       <div className="bg-teal-dark px-5 pt-6 pb-5 rounded-b-3xl flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -32,13 +31,13 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
-              <AvatarWithImage
-                imageUrl={conversation?.pharmacist?.avatar}
-                alt={conversation?.pharmacist?.name || 'Pharmacist'}
-                size={44}
-                className="w-11 h-11"
-              />
+            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+              <span className="text-sm font-bold text-teal-dark">
+                {conversation?.pharmacist ? 
+                  conversation.pharmacist.name.split(' ').map(n => n[0]).join('').slice(0, 2) : 
+                  'MC'
+                }
+              </span>
             </div>
             <div>
               <p className="text-primary-foreground font-bold text-sm">
@@ -66,7 +65,7 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
       </div>
 
       {/* Messages - Scrollable area */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0 pb-4">
         {messages.map((msg) => {
           if (msg.senderType === "system") {
             return <p key={msg.id} className="text-center text-xs text-muted-foreground py-2">{formatMessageTime(msg.timestamp)}</p>;
@@ -74,13 +73,10 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
           if (msg.senderType === "pharmacist") {
             return (
               <div key={msg.id} className="flex gap-2 max-w-[85%] animate-fade-in">
-                <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
-                  <AvatarWithImage
-                    imageUrl={conversation?.pharmacist?.avatar}
-                    alt={conversation?.pharmacist?.name || 'Pharmacist'}
-                    size={28}
-                    className="w-7 h-7"
-                  />
+                <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-[10px] font-bold text-teal-dark">
+                    {conversation?.pharmacist?.name.split(' ').map(n => n[0]).join('').slice(0, 2) || 'MC'}
+                  </span>
                 </div>
                 <div className="bg-card rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
                   <p className="text-sm text-foreground leading-relaxed">{msg.text}</p>
@@ -100,13 +96,8 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
         {/* Typing indicator */}
         {isTyping && (
           <div className="flex gap-2 max-w-[85%] animate-fade-in">
-            <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
-              <AvatarWithImage
-                imageUrl={conversation?.pharmacist?.avatar}
-                alt={conversation?.pharmacist?.name || 'Pharmacist'}
-                size={28}
-                className="w-7 h-7"
-              />
+            <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
+              <span className="text-[10px] font-bold text-teal-dark">MC</span>
             </div>
             <div className="bg-card rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
               <div className="flex gap-1.5 items-center h-5">
@@ -122,16 +113,20 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
       </div>
 
       {/* Quick Replies and Input - Fixed at bottom */}
-      <div className="flex-shrink-0">
-        {/* Quick Replies */}
-        <div className="px-5 pb-2">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="flex-shrink-0 bg-background border-t border-border">
+      {/* Quick Replies */}
+      <div className="px-5 pt-3 pb-2">
+        <div className="relative">
+          {/* Right fade indicator - hints more content available */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide touch-smooth-scroll" style={{ scrollSnapType: 'x-mandatory' }}>
             {quickRepliesData && quickRepliesData.length > 0 ? (
               quickRepliesData.map((qr) => (
                 <button
                   key={qr.id}
                   onClick={() => sendQuickReply(qr.text)}
-                  className="flex-shrink-0 px-4 py-2 rounded-full border border-border text-sm font-medium text-teal-dark bg-card hover:bg-secondary active:scale-95 transition-all"
+                  className="flex-shrink-0 px-4 py-2 rounded-full border border-border text-sm font-medium text-teal-dark bg-card hover:bg-secondary active:scale-95 transition-all whitespace-nowrap touch-feedback touch-no-delay"
+                  style={{ scrollSnapAlign: 'start' }}
                 >
                   {qr.text}
                 </button>
@@ -146,7 +141,8 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
                 <button
                   key={qr.id}
                   onClick={() => sendQuickReply(qr.text)}
-                  className="flex-shrink-0 px-4 py-2 rounded-full border border-border text-sm font-medium text-teal-dark bg-card hover:bg-secondary active:scale-95 transition-all"
+                  className="flex-shrink-0 px-4 py-2 rounded-full border border-border text-sm font-medium text-teal-dark bg-card hover:bg-secondary active:scale-95 transition-all whitespace-nowrap touch-feedback touch-no-delay"
+                  style={{ scrollSnapAlign: 'start' }}
                 >
                   {qr.text}
                 </button>
@@ -154,35 +150,36 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
             )}
           </div>
         </div>
+      </div>
 
         {/* Input Area - Fixed at bottom */}
-        <div className="px-5 pb-6 pt-2 bg-background border-t border-border">
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center gap-3"
-        >
-          <button
-            type="button"
-            onClick={() => toast({ title: "📷 Camera", description: "Camera feature coming soon." })}
-            className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+        <div className="px-5 pb-[88px] pt-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center gap-3"
           >
-            <Camera className="w-5 h-5 text-muted-foreground" />
-          </button>
-          <input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 bg-card rounded-full border border-border px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-dark/50 transition-colors placeholder:text-muted-foreground"
-          />
-          <button
-            type="submit"
-            disabled={!inputValue.trim()}
-            className="w-10 h-10 rounded-full bg-teal-dark flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform disabled:opacity-40"
-          >
-            <Send className="w-5 h-5 text-primary-foreground" />
-          </button>
-        </form>
-      </div>
+            <button
+              type="button"
+              onClick={() => toast({ title: "📷 Camera", description: "Camera feature coming soon." })}
+              className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+            >
+              <Camera className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Type a message..."
+              className="flex-1 bg-card rounded-full border border-border px-4 py-3 text-sm text-foreground outline-none focus:border-teal-dark/50 transition-colors placeholder:text-muted-foreground min-w-0 shadow-sm"
+            />
+            <button
+              type="submit"
+              disabled={!inputValue.trim()}
+              className="w-10 h-10 rounded-full bg-teal-dark flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform disabled:opacity-40 shadow-md"
+            >
+              <Send className="w-5 h-5 text-primary-foreground" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

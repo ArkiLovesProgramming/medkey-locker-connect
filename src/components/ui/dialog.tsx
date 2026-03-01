@@ -49,6 +49,7 @@ const DialogContent = React.forwardRef<
         "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
         "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
         "sm:rounded-2xl",
+        "max-h-[90vh] overflow-y-auto",
         className,
       )}
       {...props}
@@ -56,13 +57,14 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close
         className={cn(
-          "absolute right-4 top-4 rounded-lg",
+          "absolute right-3 top-3 rounded-lg p-1.5",
           "opacity-70 ring-offset-background",
           "transition-all duration-200",
           "hover:opacity-100 hover:bg-brand-teal-light/20",
           "focus:outline-none focus:ring-2 focus:ring-brand-teal-light focus:ring-offset-2",
           "disabled:pointer-events-none",
           "data-[state=open]:bg-brand-teal-light/20 data-[state=open]:text-brand-teal-dark",
+          "z-50",
         )}
       >
         <X className="h-5 w-5" />
@@ -76,9 +78,10 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
+      "flex flex-col space-y-3 text-center sm:text-left",
       "bg-gradient-medkey-light/50",
-      "p-6 -mx-6 -mt-6 mb-4 border-b border-brand-teal-light/20",
+      "px-6 pt-6 pb-5 -mx-6 -mt-6 mb-6 border-b border-brand-teal-light/20",
+      "pr-12", // Make room for close button on mobile
       className,
     )}
     {...props}
@@ -105,7 +108,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-lg font-bold leading-none tracking-tight",
+      "text-lg font-bold leading-snug tracking-tight",
       "text-brand-teal-dark",
       className,
     )}
@@ -120,7 +123,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-muted-foreground mt-2", className)}
     {...props}
   />
 ));

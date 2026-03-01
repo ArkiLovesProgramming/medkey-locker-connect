@@ -499,6 +499,47 @@ export const useUpdateUserSettings = () => {
 };
 
 // ============================================================================
+// Family Management Hooks
+// ============================================================================
+
+export const useAddFamilyMember = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (memberData: Omit<FamilyMember, 'id' | 'createdAt' | 'role'>) =>
+      userService.addFamilyMember(memberData).then(res => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user', 'family'] });
+    },
+  });
+};
+
+export const useUpdateFamilyMember = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ memberId, updates }: { memberId: string; updates: Partial<FamilyMember> }) =>
+      userService.updateUserProfile(memberId, updates).then(res => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user', 'family'] });
+      queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
+    },
+  });
+};
+
+export const useRemoveFamilyMember = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (memberId: string) =>
+      userService.removeFamilyMember(memberId).then(res => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user', 'family'] });
+    },
+  });
+};
+
+// ============================================================================
 // Dashboard Data Hook (Composite)
 // ============================================================================
 
