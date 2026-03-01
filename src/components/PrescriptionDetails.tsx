@@ -1,39 +1,69 @@
+import { useState } from "react";
 import {
-  ArrowLeft,
-  Phone,
-  MoreVertical,
-  Pill,
-  Calendar,
-  Clock,
-  ShieldCheck,
-  Info,
-  Check,
-  RotateCcw,
+  ArrowLeft, Phone, MoreVertical, Pill, Calendar, Clock,
+  ShieldCheck, Info, Check, RotateCcw, X,
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface PrescriptionDetailsProps {
   onNavigate: (screen: number) => void;
 }
 
 const PrescriptionDetails = ({ onNavigate }: PrescriptionDetailsProps) => {
+  const [approved, setApproved] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const handleApprove = () => {
+    setApproved(true);
+    toast({
+      title: "✅ Prescription Approved",
+      description: "Amoxicillin fill has been approved. You'll be notified when it's ready.",
+    });
+  };
+
   return (
     <div className="pb-24">
       {/* Header - Teal background */}
       <div className="bg-teal-dark rounded-b-3xl px-5 pt-5 pb-7">
         <div className="flex items-center justify-between mb-5">
-          <button onClick={() => onNavigate(1)} className="p-1">
+          <button onClick={() => onNavigate(1)} className="p-1 active:scale-90 transition-transform">
             <ArrowLeft className="w-6 h-6 text-primary-foreground" />
           </button>
           <h2 className="text-primary-foreground font-semibold text-base">Prescription Details</h2>
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-full bg-amber flex items-center justify-center">
+            <button
+              onClick={() => toast({ title: "📞 Calling Pharmacy", description: "Connecting you to MEDkey pharmacy..." })}
+              className="w-9 h-9 rounded-full bg-amber flex items-center justify-center active:scale-90 transition-transform"
+            >
               <Phone className="w-4 h-4 text-amber-fg" />
             </button>
-            <button className="p-1">
+            <button
+              onClick={() => setShowMore(!showMore)}
+              className="p-1 active:scale-90 transition-transform"
+            >
               <MoreVertical className="w-5 h-5 text-primary-foreground/70" />
             </button>
           </div>
         </div>
+
+        {/* Dropdown menu */}
+        {showMore && (
+          <div className="absolute right-6 top-14 bg-card rounded-2xl shadow-lg border border-border z-50 animate-fade-in overflow-hidden">
+            {["Share Prescription", "Print Details", "Report Issue"].map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  setShowMore(false);
+                  toast({ title: item, description: `${item} action initiated.` });
+                }}
+                className="w-full text-left px-5 py-3 text-sm text-foreground hover:bg-muted transition-colors border-b border-border last:border-0"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center">
             <Pill className="w-7 h-7 text-primary-foreground" />
@@ -70,28 +100,20 @@ const PrescriptionDetails = ({ onNavigate }: PrescriptionDetailsProps) => {
 
         {/* Rx Info Grid */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-card rounded-2xl p-3.5 shadow-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Date Prescribed</p>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="font-semibold text-sm text-foreground">Oct 24, 2023</span>
+          {[
+            { label: "Date Prescribed", icon: Calendar, value: "Oct 24, 2023" },
+            { label: "Last Picked Up", icon: Clock, value: "Never" },
+            { label: "Rx Number", value: "#4920391-01" },
+            { label: "Refills Remaining", value: "None", warning: true },
+          ].map((item) => (
+            <div key={item.label} className="bg-card rounded-2xl p-3.5 shadow-sm">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">{item.label}</p>
+              <div className="flex items-center gap-1.5">
+                {item.icon && <item.icon className="w-3.5 h-3.5 text-muted-foreground" />}
+                <span className={`font-semibold text-sm ${item.warning ? "text-warning" : "text-foreground"}`}>{item.value}</span>
+              </div>
             </div>
-          </div>
-          <div className="bg-card rounded-2xl p-3.5 shadow-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Last Picked Up</p>
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="font-semibold text-sm text-foreground">Never</span>
-            </div>
-          </div>
-          <div className="bg-card rounded-2xl p-3.5 shadow-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Rx Number</p>
-            <span className="font-semibold text-sm text-foreground">#4920391-01</span>
-          </div>
-          <div className="bg-card rounded-2xl p-3.5 shadow-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Refills Remaining</p>
-            <span className="font-semibold text-sm text-warning">None</span>
-          </div>
+          ))}
         </div>
 
         {/* Scheduled Pickup */}
@@ -106,11 +128,17 @@ const PrescriptionDetails = ({ onNavigate }: PrescriptionDetailsProps) => {
                 <p className="text-xs text-muted-foreground">Estimated Ready Time</p>
                 <p className="font-bold text-lg text-foreground">Tomorrow, 2:00 PM</p>
               </div>
-              <button className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+              <button
+                onClick={() => toast({ title: "📅 Calendar", description: "Opening date picker..." })}
+                className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center active:scale-90 transition-transform"
+              >
                 <Calendar className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
-            <button className="w-full bg-teal-light text-teal-dark font-semibold text-sm py-3 rounded-xl flex items-center justify-center gap-2">
+            <button
+              onClick={() => toast({ title: "⏰ Request Sent", description: "We'll try to prepare your order earlier." })}
+              className="w-full bg-teal-light text-teal-dark font-semibold text-sm py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+            >
               <RotateCcw className="w-4 h-4" />
               Request Earlier Pickup
             </button>
@@ -155,16 +183,41 @@ const PrescriptionDetails = ({ onNavigate }: PrescriptionDetailsProps) => {
         {/* Bottom Actions */}
         <div className="pt-2 pb-4">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-success" />
-            <span className="text-sm text-muted-foreground">Ready for review</span>
+            <span className={`w-2 h-2 rounded-full ${approved ? "bg-teal-dark" : "bg-success animate-pulse"}`} />
+            <span className="text-sm text-muted-foreground">{approved ? "Approved" : "Ready for review"}</span>
           </div>
-          <button className="w-full bg-amber text-amber-fg font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md">
-            Approve Fill
-            <Check className="w-5 h-5" />
+          <button
+            onClick={handleApprove}
+            disabled={approved}
+            className={`w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 ${
+              approved
+                ? "bg-success text-primary-foreground"
+                : "bg-amber text-amber-fg"
+            }`}
+          >
+            {approved ? (
+              <>
+                <Check className="w-5 h-5" />
+                Approved
+              </>
+            ) : (
+              <>
+                Approve Fill
+                <Check className="w-5 h-5" />
+              </>
+            )}
           </button>
-          <button className="w-full text-center text-sm text-muted-foreground mt-3 py-2">
-            Cancel Request
-          </button>
+          {!approved && (
+            <button
+              onClick={() => {
+                toast({ title: "❌ Request Cancelled", description: "Your prescription fill has been cancelled." });
+                onNavigate(1);
+              }}
+              className="w-full text-center text-sm text-muted-foreground mt-3 py-2 active:text-destructive transition-colors"
+            >
+              Cancel Request
+            </button>
+          )}
         </div>
       </div>
     </div>
