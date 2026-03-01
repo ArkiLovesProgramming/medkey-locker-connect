@@ -21,9 +21,11 @@ const BottomNav = ({ activeScreen, onNavigate }: BottomNavProps) => {
           <button
             key={item.label}
             onClick={() => onNavigate(item.screen)}
-            className="relative -mt-6 flex flex-col items-center"
+            className="relative -mt-6 flex flex-col items-center group"
           >
-            <div className="w-16 h-16 rounded-full bg-teal-dark flex items-center justify-center shadow-lg border-4 border-card">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-4 border-card transition-all duration-200 active:scale-90 ${
+              activeScreen === 3 ? "bg-teal-dark scale-110" : "bg-teal-dark group-hover:scale-105"
+            }`}>
               <QrCode className="w-7 h-7 text-primary-foreground" />
             </div>
             <span className={`text-[10px] mt-0.5 font-medium ${activeScreen === 3 ? "text-teal-dark" : "text-muted-foreground"}`}>
@@ -33,15 +35,16 @@ const BottomNav = ({ activeScreen, onNavigate }: BottomNavProps) => {
         ) : (
           <button
             key={item.label}
-            onClick={() => item.screen > 0 && onNavigate(item.screen)}
-            className="flex flex-col items-center py-2 px-3"
+            onClick={() => onNavigate(item.screen)}
+            className="flex flex-col items-center py-2 px-3 active:scale-90 transition-transform"
           >
-            <item.icon
-              className={`w-6 h-6 ${activeScreen === item.screen ? "text-teal-dark" : "text-muted-foreground"}`}
-            />
-            <span
-              className={`text-[10px] mt-1 font-medium ${activeScreen === item.screen ? "text-teal-dark" : "text-muted-foreground"}`}
-            >
+            <div className="relative">
+              <item.icon className={`w-6 h-6 transition-colors duration-200 ${activeScreen === item.screen ? "text-teal-dark" : "text-muted-foreground"}`} />
+              {activeScreen === item.screen && (
+                <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-teal-dark" />
+              )}
+            </div>
+            <span className={`text-[10px] mt-1 font-medium transition-colors ${activeScreen === item.screen ? "text-teal-dark" : "text-muted-foreground"}`}>
               {item.label}
             </span>
           </button>
