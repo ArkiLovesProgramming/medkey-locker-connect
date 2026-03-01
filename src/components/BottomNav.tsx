@@ -8,10 +8,10 @@ interface BottomNavProps {
 const BottomNav = ({ activeScreen, onNavigate }: BottomNavProps) => {
   const navItems = [
     { icon: Home, label: "Home", screen: 1 },
-    { icon: Pill, label: "Meds", screen: -1 },
+    { icon: Pill, label: "Meds", screen: 4 },
     { icon: QrCode, label: "PickUp", screen: 3, isCenter: true },
-    { icon: MessageSquare, label: "Chat", screen: -1 },
-    { icon: User, label: "Profile", screen: -1 },
+    { icon: MessageSquare, label: "Chat", screen: 5 },
+    { icon: User, label: "Profile", screen: 6 },
   ];
 
   return (
