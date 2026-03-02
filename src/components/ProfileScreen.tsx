@@ -45,18 +45,18 @@ const ProfileScreen = ({ onNavigate }: ProfileScreenProps) => {
   const navigate = useNavigate();
   const [isPharmacySelectorOpen, setIsPharmacySelectorOpen] = useState(false);
   const [pharmacyId, setPharmacyId] = useState<string | undefined>(getHomePharmacyId('user-001'));
-  
+
   // Get current home pharmacy for the primary user (user-001)
-  const currentPharmacy = pharmacyId ? pharmacies[pharmacyId] : undefined;
+  const currentPharmacy = pharmacyId ? Object.values(pharmacies).find(p => p.id === pharmacyId) : undefined;
 
   const handleMenuClick = (label: string, danger?: boolean) => {
     if (danger) {
       toast({ title: "👋 Logging Out", description: "You have been logged out successfully." });
     } else if (label === "Insurance Cards") {
-      // Navigate to insurance card detail page
+      // Navigate to insurance card detail page with state to track navigation source
       const primaryCard = getPrimaryInsuranceCard();
       if (primaryCard) {
-        navigate(`/insurance-card/${primaryCard.id}`);
+        navigate(`/insurance-card/${primaryCard.id}`, { state: { from: 'profile' } });
       } else {
         toast({ title: "No Insurance Cards", description: "No active insurance cards found." });
       }

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import FamilyDashboard from "@/components/FamilyDashboard";
 import PrescriptionDetails from "@/components/PrescriptionDetails";
@@ -8,7 +9,17 @@ import PharmacistChat from "@/components/PharmacistChat";
 import ProfileScreen from "@/components/ProfileScreen";
 
 const Index = () => {
-  const [activeScreen, setActiveScreen] = useState(1);
+  const [searchParams] = useSearchParams();
+  const initialScreen = parseInt(searchParams.get('screen') || '1', 10);
+  const [activeScreen, setActiveScreen] = useState(initialScreen);
+  
+  // Update activeScreen when URL parameter changes
+  useEffect(() => {
+    const screenParam = searchParams.get('screen');
+    if (screenParam) {
+      setActiveScreen(parseInt(screenParam, 10));
+    }
+  }, [searchParams]);
 
   return (
     <div className="max-w-md mx-auto min-h-screen relative bg-background overflow-hidden shadow-2xl">

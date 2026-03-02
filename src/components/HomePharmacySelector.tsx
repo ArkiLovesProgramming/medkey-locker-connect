@@ -37,38 +37,24 @@ const HomePharmacySelector = ({
 
   const handlePharmacyClick = (pharmacyId: string) => {
     setSelectedPharmacyId(pharmacyId);
-  };
-
-  const handleSave = () => {
-    if (selectedPharmacyId) {
-      onSave(selectedPharmacyId);
-      const pharmacy = pharmacies[selectedPharmacyId];
+    onSave(pharmacyId);
+    const pharmacy = pharmacyList.find(p => p.id === pharmacyId);
+    if (pharmacy) {
       toast({
         title: "✓ Home pharmacy updated",
         description: `Your home pharmacy is now ${pharmacy.name}`,
       });
-      onClose();
-    } else {
-      toast({
-        title: "No pharmacy selected",
-        description: "Please select a pharmacy to continue",
-        variant: "destructive",
-      });
     }
-  };
-
-  const handleReset = () => {
-    setSelectedPharmacyId(undefined);
-    setSearchQuery("");
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center">
-      <div className="w-full max-w-lg bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col animate-in slide-in-from-bottom duration-300">
+      <div className="w-full max-w-lg bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl h-[70vh] flex flex-col animate-in slide-in-from-bottom duration-300">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-border">
+        <div className="flex items-center justify-between p-5 border-b border-border flex-shrink-0">
           <h2 className="text-lg font-bold text-foreground">Select Home Pharmacy</h2>
           <button
             onClick={onClose}
@@ -79,7 +65,7 @@ const HomePharmacySelector = ({
         </div>
 
         {/* Search */}
-        <div className="p-5 border-b border-border">
+        <div className="p-5 border-b border-border flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
@@ -106,20 +92,18 @@ const HomePharmacySelector = ({
                 key={pharmacy.id}
                 type="button"
                 onClick={() => handlePharmacyClick(pharmacy.id)}
-                className={`w-full p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98] cursor-pointer ${
-                  selectedPharmacyId === pharmacy.id
-                    ? "border-teal bg-teal/5 shadow-md shadow-teal/20"
-                    : "border-border bg-card hover:border-teal/50 hover:shadow-sm"
-                }`}
+                className={`w-full p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98] cursor-pointer ${selectedPharmacyId === pharmacy.id
+                  ? "border-[#0D9488] bg-[#0D9488]/10 shadow-md"
+                  : "border-border bg-card hover:border-[#0D9488]/50 hover:shadow-sm"
+                  }`}
               >
-                <div className="flex items-start gap-4 pointer-events-none">
+                <div className="flex items-start gap-4">
                   {/* Radio Button - Larger and More Visible */}
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                      selectedPharmacyId === pharmacy.id
-                        ? "border-teal bg-teal scale-110"
-                        : "border-border"
-                    }`}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${selectedPharmacyId === pharmacy.id
+                      ? "border-[#0D9488] bg-[#0D9488] scale-110"
+                      : "border-border"
+                      }`}
                   >
                     {selectedPharmacyId === pharmacy.id && (
                       <Check className="w-4 h-4 text-white" />
@@ -151,22 +135,7 @@ const HomePharmacySelector = ({
           )}
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-5 border-t border-border flex gap-3">
-          <button
-            onClick={handleReset}
-            className="flex-1 px-4 py-3 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
-          >
-            Reset
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={!selectedPharmacyId}
-            className="flex-1 px-4 py-3 rounded-xl bg-teal text-sm font-medium text-white hover:bg-teal/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Save Pharmacy
-          </button>
-        </div>
+        {/* Footer Actions Removed */}
       </div>
     </div>
   );

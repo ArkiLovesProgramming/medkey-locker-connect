@@ -106,7 +106,8 @@ const FamilyManagement = ({ onNavigate }: FamilyManagementProps) => {
             if (onNavigate) {
               onNavigate(6);
             } else {
-              navigate('/');
+              // Navigate back to profile page (screen 6)
+              navigate('/?screen=6');
             }
           }}
           className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"

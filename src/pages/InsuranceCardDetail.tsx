@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { 
   ArrowLeft, Copy, Phone, Globe, Download, Share2, 
   Check, CreditCard, Users, Calendar, DollarSign,
@@ -12,7 +12,13 @@ import { cn } from "@/lib/utils";
 const InsuranceCardDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const card = id ? getInsuranceCardById(id) : undefined;
+  
+  // Handle back button click - always return to profile (screen 6)
+  const handleBack = () => {
+    navigate('/?screen=6');
+  };
 
   // Copy to clipboard helper
   const copyToClipboard = async (text: string, label: string) => {
@@ -130,7 +136,7 @@ const InsuranceCardDetail = () => {
       <div className="bg-white border-b border-border sticky top-0 z-10">
         <div className="px-4 py-4 flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
             className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors touch-target-md touch-feedback"
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />

@@ -13,6 +13,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
   const [selected, setSelected] = useState("all");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [requestingMedId, setRequestingMedId] = useState<string | null>(null);
   const { data: familyMembers } = useFamilyMembers();
   const { data: activeMeds, isLoading: activeLoading } = useMedications(
     selected !== "all" ? { memberId: selected } : undefined
@@ -30,6 +31,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
   );
 
   const handleRefillRequest = (medicationId: string, prescriptionId: string, medicationName: string) => {
+    setRequestingMedId(medicationId);
     refillMutation.mutate(
       { medicationId, prescriptionId },
       {
@@ -38,12 +40,14 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             title: "✅ Refill Requested",
             description: `${medicationName} refill has been sent to your pharmacy.`,
           });
+          setRequestingMedId(null);
         },
         onError: () => {
           toast({
             title: "❌ Error",
             description: "Failed to request refill. Please try again.",
           });
+          setRequestingMedId(null);
         },
       }
     );
@@ -92,11 +96,10 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             <button
               key={f}
               onClick={() => setSelected(f)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay ${
-                selected === f
-                  ? "bg-teal-dark text-primary-foreground shadow-md"
-                  : "bg-card text-muted-foreground border border-border hover:border-teal-dark/30"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay ${selected === f
+                ? "bg-teal-dark text-primary-foreground shadow-md"
+                : "bg-card text-muted-foreground border border-border hover:border-teal-dark/30"
+                }`}
               style={{ scrollSnapAlign: 'start' }}
             >
               {f !== "all" && (
@@ -119,8 +122,8 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
           ) : filteredActive.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">No active medications found.</p>
           ) : (
-            filteredActive.map((med) => (
-              <div key={med.prescriptionId} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
+            filteredActive.map((med, index) => (
+              <div key={`${med.id || 'med'}-${index}`} className="bg-card rounded-2xl p-4 shadow-sm animate-fade-in">
                 <div className="flex items-start gap-3">
                   <AvatarSVG name={med.memberName} size={48} className="rounded-xl flex-shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -154,10 +157,10 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                       {med.refillable && (
                         <button
                           onClick={() => handleRefillRequest(med.id, med.prescriptionId, med.name)}
-                          disabled={refillMutation.isPending}
+                          disabled={requestingMedId === med.id}
                           className="text-sm font-semibold bg-amber text-amber-fg px-4 py-1.5 rounded-full active:scale-95 transition-transform disabled:opacity-50"
                         >
-                          {refillMutation.isPending ? "Requesting..." : "Request Refill"}
+                          {requestingMedId === med.id ? "Requesting..." : "Request Refill"}
                         </button>
                       )}
                     </div>
@@ -176,9 +179,9 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
           {filteredPast.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">No past medications found.</p>
           ) : (
-            filteredPast.map((med) => (
+            filteredPast.map((med, index) => (
               <button
-                key={med.prescriptionId}
+                key={`${med.id || 'past-med'}-${index}`}
                 onClick={() => toast({ title: med.name, description: `${med.strength} · Ended ${med.endDate}` })}
                 className="w-full bg-muted rounded-2xl p-4 opacity-70 hover:opacity-90 transition-opacity text-left active:scale-[0.98]"
               >
