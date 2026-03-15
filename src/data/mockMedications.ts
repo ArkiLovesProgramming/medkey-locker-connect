@@ -255,6 +255,22 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: true,
   },
+  // Additional Cardiovascular - Rosuvastatin
+  {
+    id: 'med-017',
+    name: 'Rosuvastatin',
+    genericName: 'Rosuvastatin Calcium',
+    strength: '20mg',
+    form: 'tablet',
+    dosage: '20mg',
+    frequency: 'Once daily',
+    instructions: 'Take at the same time each day. Avoid grapefruit products.',
+    sideEffects: ['Muscle pain', 'Weakness', 'Headache', 'Nausea', 'Stomach pain'],
+    interactions: ['Cyclosporine', 'Gemfibrozil', 'Niacin', 'Warfarin'],
+    category: 'cardiovascular',
+    requiresRefill: true,
+    prescriptionRequired: true,
+  },
 ];
 
 // Active medications for family members

@@ -141,6 +141,48 @@ export const notifications: Notification[] = [
     actionUrl: '/profile',
     metadata: {},
   },
+  // New notifications for prescription images
+  // Notification for rx-009: Rosuvastatin (David Jenkins)
+  {
+    id: 'notif-013',
+    type: 'prescription-ready',
+    title: 'Prescription Needs Approval',
+    message: 'Rosuvastatin 20mg for David needs your approval. Review and approve to proceed.',
+    read: false,
+    timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 minutes ago
+    actionUrl: '/prescriptions',
+    metadata: {
+      prescriptionId: 'rx-009',
+      orderId: 'order-007',
+    },
+  },
+  // Notification for rx-010: Amoxicillin (Sarah Jenkins)
+  {
+    id: 'notif-014',
+    type: 'prescription-ready',
+    title: 'Prescription Ready for Review',
+    message: 'Amoxicillin 500mg for Sarah is ready for review. Tap to see details.',
+    read: false,
+    timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
+    actionUrl: '/prescriptions',
+    metadata: {
+      prescriptionId: 'rx-010',
+      orderId: 'order-008',
+    },
+  },
+  // Financial notification for rx-010
+  {
+    id: 'notif-015',
+    type: 'general',
+    title: 'Insurance Coverage Update',
+    message: 'Amoxicillin prescription has partial coverage. Your co-pay is $3.60.',
+    read: false,
+    timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
+    actionUrl: '/prescriptions',
+    metadata: {
+      prescriptionId: 'rx-010',
+    },
+  },
 ];
 
 // Helper functions

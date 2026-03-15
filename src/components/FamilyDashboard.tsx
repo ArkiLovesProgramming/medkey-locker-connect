@@ -7,7 +7,7 @@ import { formatRelativeTime } from "@/utils/formatters";
 import { PRESCRIPTION_STATUS } from "@/utils/constants";
 
 interface FamilyDashboardProps {
-  onNavigate: (screen: number) => void;
+  onNavigate: (screen: number, prescriptionId?: string) => void;
 }
 
 const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
@@ -83,10 +83,10 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
 
         {/* Pending Prescriptions */}
         {pendingPrescriptions && pendingPrescriptions.length > 0 ? (
-          pendingPrescriptions.slice(0, 2).map((prescription) => (
+          pendingPrescriptions.map((prescription) => (
             <button
               key={prescription.id}
-              onClick={() => onNavigate(2)}
+              onClick={() => onNavigate(2, prescription.id)}
               className="w-full bg-teal-light rounded-2xl p-4 flex items-center gap-4 mb-3 text-left active:scale-[0.98] transition-transform duration-150"
             >
               <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">

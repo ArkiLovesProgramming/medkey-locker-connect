@@ -39,6 +39,15 @@ export const prescribers: Record<string, Prescriber> = {
     npi: '4567890123',
     avatar: undefined, // Use SVG avatar
   },
+  'dr-phil': {
+    id: 'dr-005',
+    name: 'Dr. Phil Better',
+    specialty: 'Internal Medicine',
+    phone: '+1 (555) 345-6793',
+    address: '456 Wellness Blvd, Suite 200, Springfield, IL 62705',
+    npi: '5678901234',
+    avatar: undefined, // Use SVG avatar
+  },
 };
 
 // Pharmacy database
@@ -328,6 +337,83 @@ export const prescriptions: Prescription[] = [
       deductible: 0,
     },
     notes: 'Prescription expired. New prescription required.',
+  },
+  // New prescriptions from images
+  // Image 1: Rosuvastatin for David Jenkins
+  {
+    id: 'rx-009',
+    rxNumber: 'RX-4920391-01',
+    medicationId: 'med-017',
+    medicationName: 'Rosuvastatin',
+    strength: '20mg',
+    quantity: 90,
+    dosage: '20mg',
+    frequency: 'Once daily',
+    status: 'needs-approval',
+    patientId: 'user-002',
+    patientName: 'David Jenkins',
+    prescriber: prescribers['dr-phil'],
+    pharmacy: pharmacies['medkey-main'],
+    datePrescribed: '2025-12-15',
+    dateExpires: '2026-12-15',
+    lastPickedUp: '2025-12-17',
+    refillsAllowed: 2,
+    refillsRemaining: 1,
+    insurance: jenkinsInsurance,
+    financials: {
+      totalCost: 45.00,
+      insuranceCoverage: 45.00,
+      copay: 0.00,
+      deductible: 0,
+      coverageReason: 'Blue Cross (75%) + Sunlife (25%)',
+      coverageItems: [
+        { provider: 'Blue Cross', percentage: 75, amount: 33.75 },
+        { provider: 'Sunlife', percentage: 25, amount: 11.25 },
+      ],
+    },
+    pickupInfo: {
+      estimatedReadyTime: '2026-03-15T14:00:00Z',
+      lockerNumber: 'B-05',
+      orderNumber: '38472-C',
+    },
+    notes: 'Take 1 tablet once daily. Avoid grapefruit products.',
+  },
+  // Image 2: Amoxicillin for Sarah Jenkins
+  {
+    id: 'rx-010',
+    rxNumber: 'RX-4920392-02',
+    medicationId: 'med-001',
+    medicationName: 'Amoxicillin',
+    strength: '500mg',
+    quantity: 14,
+    dosage: '500mg',
+    frequency: 'Twice daily (BID) for 7 days',
+    status: 'needs-approval',
+    patientId: 'user-001',
+    patientName: 'Sarah Jenkins',
+    prescriber: prescribers['dr-phil'],
+    pharmacy: pharmacies['medkey-main'],
+    datePrescribed: '2026-03-16',
+    dateExpires: '2026-09-16',
+    refillsAllowed: 0,
+    refillsRemaining: 0,
+    insurance: jenkinsInsurance,
+    financials: {
+      totalCost: 18.00,
+      insuranceCoverage: 14.40,
+      copay: 3.60,
+      deductible: 0,
+      coverageReason: 'DIN not covered',
+      coverageItems: [
+        { provider: 'Blue Cross', percentage: 80, amount: 14.40 },
+      ],
+    },
+    pickupInfo: {
+      estimatedReadyTime: '2026-03-15T14:00:00Z',
+      lockerNumber: 'A-08',
+      orderNumber: '38473-D',
+    },
+    notes: 'Complete full 7-day course. Take with food to reduce stomach upset. Ready for review.',
   },
 ];
 

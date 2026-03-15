@@ -160,6 +160,47 @@ export const pickupOrders: PickupOrder[] = [
     pharmacy: pharmacies['medkey-main'],
     createdAt: '2025-10-21T15:30:00Z',
   },
+  // New orders from prescription images
+  // Order for rx-009: Rosuvastatin (David Jenkins)
+  {
+    id: 'order-007',
+    orderNumber: '38472-C',
+    status: 'ready',
+    items: [
+      {
+        prescriptionId: 'rx-009',
+        medicationName: 'Rosuvastatin 20mg',
+        quantity: 90,
+        patientName: 'David Jenkins',
+      },
+    ],
+    qrCode: qrPatternToString(generateQRCodePattern('order-007')),
+    qrCodeExpiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    lockerNumber: 'B-05',
+    estimatedReadyTime: '2026-03-15T14:00:00Z',
+    pharmacy: pharmacies['medkey-main'],
+    createdAt: '2026-03-15T10:00:00Z',
+  },
+  // Order for rx-010: Amoxicillin (Sarah Jenkins)
+  {
+    id: 'order-008',
+    orderNumber: '38473-D',
+    status: 'ready',
+    items: [
+      {
+        prescriptionId: 'rx-010',
+        medicationName: 'Amoxicillin 500mg',
+        quantity: 14,
+        patientName: 'Sarah Jenkins',
+      },
+    ],
+    qrCode: qrPatternToString(generateQRCodePattern('order-008')),
+    qrCodeExpiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    lockerNumber: 'A-08',
+    estimatedReadyTime: '2026-03-15T14:00:00Z',
+    pharmacy: pharmacies['medkey-main'],
+    createdAt: '2026-03-15T10:30:00Z',
+  },
 ];
 
 // Locker locations map

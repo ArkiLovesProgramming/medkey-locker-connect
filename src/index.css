@@ -66,8 +66,11 @@
     --teal-light: 180 40% 95%;
     --teal-icon: 174 50% 42%;
 
-    --amber: 45 96% 58%;
+    --amber: 45 96% 58%;    /* #FFB830 - 金黄色 */
     --amber-foreground: 35 80% 18%;
+    
+    /* Additional MEDlockd colors */
+    --teal-pale: 188 50% 92%;  /* #E0F2F4 - 非常浅的青色用于头像背景 */
 
     /* Sidebar Colors */
     --sidebar-background: 0 0% 98%;
@@ -220,6 +223,14 @@
   }
   .text-amber-fg {
     color: hsl(var(--amber-foreground));
+  }
+  
+  /* Additional MEDlockd utilities */
+  .bg-teal-pale {
+    background-color: hsl(var(--teal-pale));
+  }
+  .text-teal-pale {
+    color: hsl(var(--teal-pale));
   }
 
   /* Shadow Utilities - MEDkey Theme */

@@ -161,12 +161,20 @@ export interface Pharmacy {
   hours?: string;
 }
 
+// 单个保险覆盖项
+export interface InsuranceCoverageItem {
+  provider: string;
+  percentage: number;
+  amount: number;
+}
+
 export interface PrescriptionFinancials {
   totalCost: number;
   insuranceCoverage: number;
   copay: number;
   deductible: number;
   coverageReason?: string;
+  coverageItems?: InsuranceCoverageItem[]; // 多保险明细
 }
 
 export interface PickupInfo {

@@ -12,6 +12,7 @@ const Index = () => {
   const [searchParams] = useSearchParams();
   const initialScreen = parseInt(searchParams.get('screen') || '1', 10);
   const [activeScreen, setActiveScreen] = useState(initialScreen);
+  const [selectedPrescriptionId, setSelectedPrescriptionId] = useState<string | undefined>(undefined);
   
   // Update activeScreen when URL parameter changes
   useEffect(() => {
@@ -21,15 +22,23 @@ const Index = () => {
     }
   }, [searchParams]);
 
+  // Handle navigation with prescription ID
+  const handleNavigate = (screen: number, prescriptionId?: string) => {
+    if (prescriptionId) {
+      setSelectedPrescriptionId(prescriptionId);
+    }
+    setActiveScreen(screen);
+  };
+
   return (
     <div className="max-w-md mx-auto min-h-screen relative bg-background overflow-hidden shadow-2xl">
       <div className="overflow-y-auto min-h-screen">
-        {activeScreen === 1 && <FamilyDashboard onNavigate={setActiveScreen} />}
-        {activeScreen === 2 && <PrescriptionDetails onNavigate={setActiveScreen} />}
-        {activeScreen === 3 && <SecureLockerPickup onNavigate={setActiveScreen} />}
-        {activeScreen === 4 && <MedicineCabinet onNavigate={setActiveScreen} />}
-        {activeScreen === 5 && <PharmacistChat onNavigate={setActiveScreen} />}
-        {activeScreen === 6 && <ProfileScreen onNavigate={setActiveScreen} />}
+        {activeScreen === 1 && <FamilyDashboard onNavigate={handleNavigate} />}
+        {activeScreen === 2 && <PrescriptionDetails prescriptionId={selectedPrescriptionId} onNavigate={handleNavigate} />}
+        {activeScreen === 3 && <SecureLockerPickup onNavigate={handleNavigate} />}
+        {activeScreen === 4 && <MedicineCabinet onNavigate={handleNavigate} />}
+        {activeScreen === 5 && <PharmacistChat onNavigate={handleNavigate} />}
+        {activeScreen === 6 && <ProfileScreen onNavigate={handleNavigate} />}
       </div>
       <BottomNav activeScreen={activeScreen} onNavigate={setActiveScreen} />
     </div>

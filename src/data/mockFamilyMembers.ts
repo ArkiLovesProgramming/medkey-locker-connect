@@ -68,6 +68,27 @@ export const insurancePlans: Record<string, InsuranceInfo> = {
     customerServicePhone: '1-800-555-0377',
     website: 'www.uhc.com',
   },
+  sunlife: {
+    provider: 'Sunlife',
+    planName: 'Health Plus',
+    memberId: 'SUN123456789',
+    groupNumber: 'GRP-778899',
+    coverageType: 'secondary',
+    clientName: 'Jenkins Family',
+    relationship: 'self',
+    cardholderGroupId: 'CHG-998877',
+    effectiveDate: '2024-01-01',
+    expirationDate: '2025-12-31',
+    copayPrimary: 15,
+    copaySpecialist: 30,
+    deductible: 500,
+    outOfPocketMax: 2500,
+    rxGroup: 'RXG998877',
+    rxPCN: 'PCN112233',
+    bin: 'BIN001122334',
+    customerServicePhone: '1-800-555-0466',
+    website: 'www.sunlife.com',
+  },
 };
 
 // ============================================================================

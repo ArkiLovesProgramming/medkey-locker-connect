@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, HelpCircle, Package, Pill, User, Copy, CheckCheck } from "lucide-react";
+import { ArrowLeft, HelpCircle, Package, Pill, User, Scan, Sun } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface SecureLockerPickupProps {
@@ -32,7 +32,7 @@ const QRCodePlaceholder = () => {
   return (
     <div className="inline-grid gap-0" style={{ gridTemplateColumns: `repeat(19, 1fr)` }}>
       {pattern.flat().map((cell, i) => (
-        <div key={i} className={`w-3 h-3 ${cell ? "bg-teal-dark" : "bg-transparent"}`} />
+        <div key={i} className={`w-3.5 h-3.5 ${cell ? "bg-teal-dark" : "bg-transparent"}`} />
       ))}
     </div>
   );
@@ -60,9 +60,9 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
   };
 
   return (
-    <div className="pb-24 px-5 pt-5">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+    <div className="pb-20 px-5 pt-5">
+      {/* Header - Compact */}
+      <div className="flex items-center justify-between mb-4">
         <button onClick={() => onNavigate(1)} className="p-1 active:scale-90 transition-transform">
           <ArrowLeft className="w-6 h-6 text-foreground" />
         </button>
@@ -75,54 +75,60 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
         </button>
       </div>
 
-      <h1 className="text-3xl font-bold text-teal-dark text-center mb-4">MEDlockd Access</h1>
-
-      {/* Order Badge */}
-      <div className="flex justify-center mb-5">
+      {/* Title and Order Badge - Inline */}
+      <div className="text-center mb-4">
+        <h1 className="text-2xl font-bold text-teal-dark mb-3">MEDlockd Access</h1>
         <button
           onClick={handleCopyOrder}
-          className="bg-teal-dark px-5 py-2 rounded-full flex items-center gap-2 active:scale-95 transition-transform"
+          className="bg-teal-dark px-5 py-2 rounded-full flex items-center gap-2 mx-auto active:scale-95 transition-transform shadow-sm"
         >
-          <Package className="w-4 h-4 text-amber" />
-          <span className="text-primary-foreground font-semibold text-sm">Order #29384-B</span>
-          {copied ? <CheckCheck className="w-3.5 h-3.5 text-amber" /> : <Copy className="w-3.5 h-3.5 text-primary-foreground/50" />}
+          <Package className="w-4 h-4 text-white/90" />
+          <span className="text-white font-semibold text-sm">Order #29384-B</span>
         </button>
       </div>
 
-      {/* QR Code Card */}
-      <div className="bg-card rounded-3xl p-5 shadow-sm border border-border relative overflow-hidden mb-4">
-        <div className="flex items-center justify-center gap-2 mb-5">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber animate-pulse" />
-          <span className="text-sm text-muted-foreground">
-            Code valid for <span className="font-bold text-teal-dark tabular-nums">{minutes}:{seconds}</span>
+      {/* QR Code Card - Compact */}
+      <div className="bg-gradient-to-b from-teal-light/10 to-white rounded-3xl p-4 shadow-medkey-md border border-teal-light/20 relative overflow-hidden mb-4">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <span className="w-2 h-2 rounded-full bg-teal-light/60 animate-pulse" />
+          <span className="text-xs text-muted-foreground">
+            Valid for <span className="font-bold text-teal-dark tabular-nums">{minutes}:{seconds}</span>
           </span>
         </div>
 
         <div className="relative flex items-center justify-center py-4">
-          <div className="absolute top-0 left-4 w-8 h-8 border-l-4 border-t-4 border-amber rounded-tl-lg" />
-          <div className="absolute top-0 right-4 w-8 h-8 border-r-4 border-t-4 border-amber rounded-tr-lg" />
-          <div className="absolute bottom-0 left-4 w-8 h-8 border-l-4 border-b-4 border-amber rounded-bl-lg" />
-          <div className="absolute bottom-0 right-4 w-8 h-8 border-r-4 border-b-4 border-amber rounded-br-lg" />
-          <QRCodePlaceholder />
+          {/* QR Code */}
+          <div className="relative">
+            <QRCodePlaceholder />
+            {/* Corner markers with spacing from QR code */}
+            <div className="absolute -top-3 -left-3 w-9 h-9 border-l-[6px] border-t-[6px] border-amber rounded-tl-lg pointer-events-none" />
+            <div className="absolute -top-3 -right-3 w-9 h-9 border-r-[6px] border-t-[6px] border-amber rounded-tr-lg pointer-events-none" />
+            <div className="absolute -bottom-3 -left-3 w-9 h-9 border-l-[6px] border-b-[6px] border-amber rounded-bl-lg pointer-events-none" />
+            <div className="absolute -bottom-3 -right-3 w-9 h-9 border-r-[6px] border-b-[6px] border-amber rounded-br-lg pointer-events-none" />
+          </div>
         </div>
 
-        <p className="text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold mt-5">
-          Scan at locker to open compartment
+        <p className="text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold mt-4">
+          Scan at locker to open
         </p>
       </div>
 
-      <p className="text-xs text-muted-foreground text-center mb-6 italic">
-        Note: The QR code will switch every 15 minutes, for security reasons.
-      </p>
+      {/* Single Action Button - Compact */}
+      <button className="w-full bg-teal-dark text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-medkey-md mb-4">
+        <Scan className="w-5 h-5" />
+        Scan at Locker (Mock)
+      </button>
 
-      {/* Inside this Box */}
+      {/* Medications In This Box - Compact */}
       <div>
         <div className="flex items-center gap-2 mb-3">
           <Pill className="w-5 h-5 text-teal-dark" />
-          <h4 className="font-bold text-foreground">Inside this Box</h4>
+          <h4 className="font-bold text-foreground text-xs uppercase tracking-wider">
+            In This Box
+          </h4>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {[
             { name: "Lily Jenkins", med: "Amoxicillin (Qty: 14)" },
             { name: "David Jenkins", med: "Atorvastatin (Qty: 30)" },
@@ -130,14 +136,14 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
             <button
               key={item.name}
               onClick={() => onNavigate(2)}
-              className="w-full bg-card rounded-2xl p-4 shadow-sm flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
+              className="w-full bg-white rounded-xl p-3 shadow-sm border border-border/50 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
             >
-              <div className="w-10 h-10 rounded-full bg-teal-light flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-teal-light/30 flex items-center justify-center flex-shrink-0">
                 <User className="w-5 h-5 text-teal-dark" />
               </div>
-              <div>
-                <p className="font-semibold text-foreground">{item.name}</p>
-                <p className="text-sm text-muted-foreground">{item.med}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-foreground text-sm truncate">{item.name}</p>
+                <p className="text-xs text-muted-foreground font-medium truncate">{item.med}</p>
               </div>
             </button>
           ))}
