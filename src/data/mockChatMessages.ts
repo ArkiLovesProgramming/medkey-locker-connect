@@ -92,8 +92,6 @@ export const autoReplies: Record<string, string> = {
   
   'side-effects-atorvastatin': "Common side effects include muscle pain, weakness, or tenderness. Rare but serious side effects include liver problems. Contact your doctor if you experience unusual fatigue, dark urine, or yellowing of skin/eyes.",
   
-  'side-effects-lisinopril': "Common side effects include dizziness, headache, and dry cough. The cough may persist but is usually harmless. Contact us if you experience swelling of face/lips/tongue or difficulty breathing.",
-  
   // Refill responses
   'refill': "I've initiated a refill request for your medication. You'll receive a notification when it's ready for pickup at the MEDkey station. This typically takes 24-48 hours.",
   
@@ -113,16 +111,12 @@ export const autoReplies: Record<string, string> = {
   
   'dosage-atorvastatin': "Take Atorvastatin once daily in the evening for best results. Can be taken with or without food. Avoid grapefruit products as they can increase drug levels.",
   
-  'dosage-lisinopril': "Take Lisinopril once daily at the same time each day, preferably in the morning. Can be taken with or without food. Rise slowly from sitting/lying positions to minimize dizziness.",
-  
   // Food interactions
   'food-general': "Some medications should be taken with food to reduce stomach upset, while others work best on an empty stomach. Check your specific medication instructions or ask me for details.",
   
   'food-amoxicillin': "Amoxicillin can be taken with or without food. Taking it with food may help reduce stomach upset. Complete the full course regardless of meals.",
   
   'food-atorvastatin': "Atorvastatin can be taken with or without food. However, avoid grapefruit and grapefruit juice as they can significantly increase drug levels and side effects.",
-  
-  'food-lisinopril': "Lisinopril can be taken with or without food. Maintain consistent timing relative to meals for best results.",
   
   // Missed dose
   'missed-dose-general': "If you miss a dose, take it as soon as you remember. If it's almost time for your next dose, skip the missed dose. Do not double up to make up for a missed dose.",
@@ -233,7 +227,7 @@ export const chatConversations: PharmacistChat[] = [
         conversationId: 'chat-002',
         senderId: 'user-002',
         senderType: 'user',
-        text: 'I take Atorvastatin and Lisinopril',
+        text: 'I take Atorvastatin',
         timestamp: '2025-10-20T15:19:45Z',
         read: true,
       },
@@ -242,7 +236,7 @@ export const chatConversations: PharmacistChat[] = [
         conversationId: 'chat-002',
         senderId: 'pharm-003',
         senderType: 'pharmacist',
-        text: 'Good news! Metformin, Atorvastatin, and Lisinopril are commonly prescribed together and don\'t have significant interactions. Just make sure to take Metformin with meals to reduce stomach upset. Continue monitoring your blood sugar as directed.',
+        text: 'Good news! Metformin and Atorvastatin are commonly prescribed together and don\'t have significant interactions. Just make sure to take Metformin with meals to reduce stomach upset. Continue monitoring your blood sugar as directed.',
         timestamp: '2025-10-20T15:21:00Z',
         read: true,
       },
@@ -325,11 +319,6 @@ export function findAutoReplyByKeyword(text: string): string {
     if (lowerText.includes('dosage') || lowerText.includes('how to')) return autoReplies['dosage-atorvastatin'];
     if (lowerText.includes('food')) return autoReplies['food-atorvastatin'];
     if (lowerText.includes('miss')) return autoReplies['missed-dose-atorvastatin'];
-  }
-  
-  if (lowerText.includes('lisinopril')) {
-    if (lowerText.includes('dosage') || lowerText.includes('how to')) return autoReplies['dosage-lisinopril'];
-    if (lowerText.includes('food')) return autoReplies['food-lisinopril'];
   }
   
   // Check for general categories

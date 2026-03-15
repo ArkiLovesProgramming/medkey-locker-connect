@@ -33,7 +33,7 @@ const QRCodePlaceholder = () => {
   return (
     <div className="inline-grid gap-0" style={{ gridTemplateColumns: `repeat(19, 1fr)` }}>
       {pattern.flat().map((cell, i) => (
-        <div key={i} className={`w-3.5 h-3.5 ${cell ? "bg-teal-dark" : "bg-transparent"}`} />
+        <div key={i} className={`w-3 h-3 ${cell ? "bg-teal-dark" : "bg-transparent"}`} />
       ))}
     </div>
   );
@@ -113,10 +113,10 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
           <div className="relative">
             <QRCodePlaceholder />
             {/* Corner markers with spacing from QR code */}
-            <div className="absolute -top-3 -left-3 w-9 h-9 border-l-[6px] border-t-[6px] border-amber rounded-tl-lg pointer-events-none" />
-            <div className="absolute -top-3 -right-3 w-9 h-9 border-r-[6px] border-t-[6px] border-amber rounded-tr-lg pointer-events-none" />
-            <div className="absolute -bottom-3 -left-3 w-9 h-9 border-l-[6px] border-b-[6px] border-amber rounded-bl-lg pointer-events-none" />
-            <div className="absolute -bottom-3 -right-3 w-9 h-9 border-r-[6px] border-b-[6px] border-amber rounded-br-lg pointer-events-none" />
+            <div className="absolute -top-3 -left-3 w-9 h-9 border-l-[6px] border-t-[6px] border-amber rounded-tl-lg pointer-events-none animate-breath" />
+            <div className="absolute -top-3 -right-3 w-9 h-9 border-r-[6px] border-t-[6px] border-amber rounded-tr-lg pointer-events-none animate-breath" />
+            <div className="absolute -bottom-3 -left-3 w-9 h-9 border-l-[6px] border-b-[6px] border-amber rounded-bl-lg pointer-events-none animate-breath" />
+            <div className="absolute -bottom-3 -right-3 w-9 h-9 border-r-[6px] border-b-[6px] border-amber rounded-br-lg pointer-events-none animate-breath" />
           </div>
         </div>
 

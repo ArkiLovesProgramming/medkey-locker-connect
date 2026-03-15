@@ -1,4 +1,4 @@
-import { PickupOrder, PickupOrderItem, Pharmacy } from '@/types';
+import { PickupOrder } from '@/types';
 import { pharmacies } from './mockPrescriptions';
 
 // Generate QR code pattern (simple 19x19 grid)
@@ -49,18 +49,24 @@ export const pickupOrders: PickupOrder[] = [
         quantity: 14,
         patientName: 'Lily Jenkins',
       },
+      {
+        prescriptionId: 'rx-002',
+        medicationName: 'Atorvastatin 20mg',
+        quantity: 30,
+        patientName: 'David Jenkins',
+      },
     ],
     qrCode: qrPatternToString(generateQRCodePattern('order-001')),
     qrCodeExpiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes from now
     lockerNumber: 'A-12',
     estimatedReadyTime: '2025-10-21T14:00:00Z',
-    pharmacy: pharmacies['medkey-main'],
+    pharmacy: pharmacies['pharmachoice'],
     createdAt: '2025-10-21T10:30:00Z',
   },
   {
     id: 'order-002',
     orderNumber: '29385-A',
-    status: 'ready',
+    status: 'processing',
     items: [
       {
         prescriptionId: 'rx-002',
@@ -78,9 +84,9 @@ export const pickupOrders: PickupOrder[] = [
     qrCode: qrPatternToString(generateQRCodePattern('order-002')),
     qrCodeExpiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
     lockerNumber: 'B-05',
-    estimatedReadyTime: '2025-10-21T15:00:00Z',
+    estimatedReadyTime: '2026-03-16T15:00:00Z',
     pharmacy: pharmacies['medkey-main'],
-    createdAt: '2025-10-21T11:00:00Z',
+    createdAt: '2026-03-15T11:00:00Z',
   },
   {
     id: 'order-003',
@@ -121,25 +127,6 @@ export const pickupOrders: PickupOrder[] = [
     actualPickupTime: '2025-10-15T18:45:00Z',
     pharmacy: pharmacies['medkey-main'],
     createdAt: '2025-10-15T09:30:00Z',
-  },
-  {
-    id: 'order-005',
-    orderNumber: '29390-E',
-    status: 'processing',
-    items: [
-      {
-        prescriptionId: 'rx-003',
-        medicationName: 'Lisinopril 10mg',
-        quantity: 90,
-        patientName: 'Sarah Jenkins',
-      },
-    ],
-    qrCode: qrPatternToString(generateQRCodePattern('order-005')),
-    qrCodeExpiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
-    lockerNumber: 'TBD',
-    estimatedReadyTime: '2025-10-22T14:00:00Z',
-    pharmacy: pharmacies['medkey-main'],
-    createdAt: '2025-10-21T14:00:00Z',
   },
   {
     id: 'order-006',
@@ -244,4 +231,32 @@ export function isQRCodeValid(qrCodeExpiresAt: string): boolean {
 
 export function getLockerLocation(lockerNumber: string): string {
   return lockerLocations[lockerNumber] || 'Location will be provided when ready';
+}
+
+// Helper function to get summary of ready orders for dashboard
+export function getReadyOrdersSummary(): {
+  count: number;
+  pharmacy: string;
+  patientNames: string[];
+  orderIds: string[];
+} | null {
+  const readyOrders = pickupOrders.filter(o => o.status === 'ready');
+  if (readyOrders.length === 0) return null;
+
+  const uniquePatients = new Set<string>();
+  const orderIds: string[] = [];
+  let pharmacy = 'MEDkey Pharmacy';
+
+  readyOrders.forEach(order => {
+    orderIds.push(order.id);
+    order.items.forEach(item => uniquePatients.add(item.patientName));
+    if (order.pharmacy) pharmacy = order.pharmacy.name;
+  });
+
+  return {
+    count: readyOrders.reduce((sum, o) => sum + o.items.length, 0),
+    pharmacy,
+    patientNames: Array.from(uniquePatients),
+    orderIds,
+  };
 }

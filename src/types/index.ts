@@ -19,8 +19,10 @@ export interface User {
   createdAt: string;
 }
 
+export type Relationship = 'self' | 'spouse' | 'child' | 'parent' | 'other';
+
 export interface FamilyMember extends User {
-  relationship: 'self' | 'spouse' | 'child' | 'parent' | 'other';
+  relationship: Relationship;
   insuranceInfo?: InsuranceInfo;
   allergies?: Allergy[];
   medicalConditions?: string[];
@@ -166,6 +168,11 @@ export interface InsuranceCoverageItem {
   provider: string;
   percentage: number;
   amount: number;
+  isDenied?: boolean; // 标识是否被拒赔
+  denialReason?: string; // 拒赔原因简述
+  denialDetails?: string; // 详细说明
+  solution?: string; // 解决方案
+  contactPhone?: string; // 联系电话
 }
 
 export interface PrescriptionFinancials {
@@ -319,13 +326,16 @@ export interface ActivityItem {
 
 export interface ActionItem {
   id: string;
-  type: 'approve' | 'refill' | 'pickup' | 'message';
+  type: 'approve' | 'refill' | 'pickup' | 'message' | 'insurance-denied';
   title: string;
   description: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
   dueDate?: string;
   prescriptionId?: string;
   medicationId?: string;
+  patientName?: string;
+  pharmacy?: string;
+  actionLabel?: string;
 }
 
 // ============================================================================

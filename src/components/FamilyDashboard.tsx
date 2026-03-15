@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { ChevronRight, CheckCircle, AlertCircle, Clock, Check, Bell } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { AvatarSVG, AvatarWithImage } from "@/assets/AvatarSVG";
-import { useFamilyMembers, usePrescriptionsNeedingApproval, useMedications, useDashboardData } from "@/hooks/useData";
-import { formatRelativeTime } from "@/utils/formatters";
-import { PRESCRIPTION_STATUS } from "@/utils/constants";
+import { useState, useEffect, useRef } from "react";
+import { ChevronRight, CheckCircle, AlertCircle, Clock, Check } from "lucide-react";
+import { AvatarSVG } from "@/assets/AvatarSVG";
+import { useFamilyMembers, useMedications } from "@/hooks/useData";
+import { getReadyOrders } from "@/data/mockPickupOrders";
+import { prescriptions } from "@/data/mockPrescriptions";
 
 interface FamilyDashboardProps {
   onNavigate: (screen: number, prescriptionId?: string) => void;
@@ -14,8 +13,28 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
   const [selectedMember, setSelectedMember] = useState("all");
   const { data: familyMembers, isLoading: membersLoading } = useFamilyMembers();
   const { data: activeMeds } = useMedications(selectedMember !== "all" ? { memberId: selectedMember } : undefined);
-  const { data: pendingPrescriptions } = usePrescriptionsNeedingApproval();
-  const { data: dashboardData } = useDashboardData();
+
+  // Dynamic data for Action Needed cards
+  const readyOrders = getReadyOrders();
+  const readyOrdersCount = readyOrders.reduce((sum, o) => sum + o.items.length, 0);
+  const uniquePatients = Array.from(
+    new Set(readyOrders.flatMap(o => o.items.map(i => i.patientName)))
+  );
+  const pharmacyName = readyOrders[0]?.pharmacy?.name || 'MEDkey Pharmacy';
+
+  // Format patient names as "For Lily & David" (first names only)
+  const firstNames = uniquePatients.map(name => name.split(' ')[0]);
+  const patientNamesText = firstNames.length > 1
+    ? `For ${firstNames.slice(0, -1).join(', ')} & ${firstNames.slice(-1)[0]}`
+    : firstNames.length === 1
+    ? `For ${firstNames[0]}`
+    : '';
+
+  // Find insurance denied prescription for Lily Jenkins
+  const insuranceDeniedPrescription = prescriptions.find(
+    p => p.patientName.includes('Lily') && p.status === 'needs-approval' &&
+    (p.financials?.coverageItems?.some(item => item.isDenied) || p.financials?.coverageReason?.includes('denied'))
+  );
 
   if (membersLoading) {
     return (
@@ -44,36 +63,38 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
       </div>
 
       {/* Family Members */}
-      <div className="mb-6">
+      <div className="relative mb-6">
         <p className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">Family Members</p>
-        <div className="relative">
-          {/* Left fade indicator */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none opacity-0" />
-          {/* Right fade indicator - always visible to hint scrollability */}
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" style={{ scrollSnapType: 'x-mandatory' }}>
-            {displayMembers.map((m) => (
+        <div 
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" 
+          style={{ scrollSnapType: 'x-mandatory' }}
+          onScroll={handleScroll}
+        >
+          {displayMembers.map((m) => {
+            const isSelected = selectedMember === m.id;
+            return (
               <button
                 key={m.id}
                 onClick={() => setSelectedMember(m.id)}
-                className="flex flex-col items-center flex-shrink-0 group touch-feedback touch-no-delay"
+                className={`flex flex-col items-center flex-shrink-0 gap-1.5 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay ${
+                  isSelected ? "opacity-100" : "opacity-70"
+                }`}
                 style={{ scrollSnapAlign: 'start' }}
               >
                 <AvatarSVG
                   name={`${m.firstName} ${m.lastName}`}
                   size={64}
-                  className={`rounded-2xl transition-all duration-200 active:scale-95 ${
-                    selectedMember === m.id
-                      ? "ring-3 ring-teal-dark ring-offset-2"
-                      : "opacity-70 group-hover:opacity-100"
+                  className={`rounded-2xl ${
+                    isSelected ? "ring-3 ring-teal-dark ring-offset-2" : ""
                   }`}
                 />
-                <span className={`text-xs mt-1.5 font-medium transition-colors ${
-                  selectedMember === m.id ? "text-teal-dark" : "text-muted-foreground"
+                <span className={`text-xs font-medium whitespace-nowrap ${
+                  isSelected ? "text-teal-dark" : "text-muted-foreground"
                 }`}>{m.firstName}</span>
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
 
@@ -81,28 +102,60 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
       <div className="mb-6">
         <p className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">Action Needed</p>
 
-        {/* Pending Prescriptions */}
-        {pendingPrescriptions && pendingPrescriptions.length > 0 ? (
-          pendingPrescriptions.map((prescription) => (
+        <div className="space-y-3">
+          {/* Card 1: Medications Ready for Pickup */}
+          {readyOrdersCount > 0 && (
             <button
-              key={prescription.id}
-              onClick={() => onNavigate(2, prescription.id)}
-              className="w-full bg-teal-light rounded-2xl p-4 flex items-center gap-4 mb-3 text-left active:scale-[0.98] transition-transform duration-150"
+              onClick={() => onNavigate(3)}
+              className="w-full bg-teal-light rounded-2xl p-4 flex items-center gap-4 text-left active:scale-[0.98] transition-transform duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
-                <CheckCircle className="w-6 h-6 text-teal-icon" />
+              <div className="w-11 h-11 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-5 h-5 text-teal-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-foreground">{prescription.medicationName} Ready</p>
-                <p className="text-sm text-teal-mid">Ready for pickup at MEDkey.</p>
-                <p className="text-xs text-muted-foreground mt-0.5">For {prescription.patientName}</p>
+                <p className="font-bold text-foreground text-sm leading-tight">
+                  {readyOrdersCount} Medication{readyOrdersCount > 1 ? 's' : ''} Ready for PickUp
+                </p>
+                <p className="text-xs text-teal-700 leading-tight mt-0.5">Ready for pickup at {pharmacyName}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{patientNamesText}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
             </button>
-          ))
-        ) : (
-          <p className="text-sm text-muted-foreground text-center py-4">No actions needed at the moment.</p>
-        )}
+          )}
+
+          {/* Card 2: Insurance Coverage Issue */}
+          {insuranceDeniedPrescription && (
+            <button
+              onClick={() => onNavigate(2, insuranceDeniedPrescription.id)}
+              className="w-full bg-amber-50 rounded-2xl p-4 flex items-center gap-4 text-left active:scale-[0.98] transition-transform duration-150 border border-amber-100"
+            >
+              <div className="w-11 h-11 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-5 h-5 text-amber-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-foreground text-sm leading-tight">
+                  {insuranceDeniedPrescription.patientName}
+                </p>
+                <p className="text-xs text-red-500 font-medium leading-tight mt-0.5">
+                  {insuranceDeniedPrescription.financials?.coverageItems?.find(item => item.isDenied)?.denialReason ||
+                   insuranceDeniedPrescription.financials?.coverageReason ||
+                   'Insurance denied coverage'}
+                </p>
+                <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                  Action Needed: Insurance Coverage Issue
+                </p>
+              </div>
+              <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0">
+                ALERT
+              </span>
+            </button>
+          )}
+
+          {/* Empty state when no action items */}
+          {readyOrdersCount === 0 && !insuranceDeniedPrescription && (
+            <p className="text-sm text-muted-foreground text-center py-4">No actions needed at the moment.</p>
+          )}
+        </div>
       </div>
 
       {/* Active Medications */}

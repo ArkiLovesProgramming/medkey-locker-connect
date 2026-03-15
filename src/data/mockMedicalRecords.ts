@@ -13,8 +13,7 @@ export const medicalRecords: MedicalRecord[] = [
     date: '2024-03-15',
     provider: 'Dr. James Wilson',
     facility: 'Springfield Family Medicine',
-    notes: 'BP consistently elevated over 3 visits. Started on lifestyle modifications and Lisinopril.',
-    relatedPrescriptions: ['rx-003'],
+    notes: 'BP consistently elevated over 3 visits. Started on lifestyle modifications.',
   },
   {
     id: 'mr-002',
@@ -174,7 +173,33 @@ export const medicalRecords: MedicalRecord[] = [
     facility: 'Springfield Pediatrics',
     notes: 'Developed hives and nausea after eating shrimp. Advised to avoid all shellfish. Epinephrine auto-injector prescribed.',
   },
-  
+
+  // Emma's medical records (Fix 1: Adding missing health data)
+  {
+    id: 'mr-018',
+    patientId: 'user-004',
+    patientName: 'Emma Jenkins',
+    type: 'diagnosis',
+    title: 'Routine Well-Child Visit',
+    description: 'Annual well-child examination and growth assessment',
+    date: '2025-08-15',
+    provider: 'Dr. Priya Patel',
+    facility: 'Springfield Pediatrics',
+    notes: 'Normal growth and development. Height 50th percentile, weight 45th percentile. All developmental milestones met.',
+  },
+  {
+    id: 'mr-019',
+    patientId: 'user-004',
+    patientName: 'Emma Jenkins',
+    type: 'diagnosis',
+    title: 'Viral Upper Respiratory Infection',
+    description: 'Common cold with mild fever and cough',
+    date: '2026-01-10',
+    provider: 'Dr. Priya Patel',
+    facility: 'Springfield Pediatrics',
+    notes: 'Self-limiting viral infection. Supportive care recommended. Rest and fluids.',
+  },
+
   // Additional historical records
   {
     id: 'mr-014',
@@ -239,7 +264,7 @@ export const healthConditions: HealthCondition[] = [
     dateDiagnosed: '2024-03-15',
     status: 'chronic',
     severity: 'moderate',
-    notes: 'Well controlled on Lisinopril 10mg daily. Home BP monitoring recommended.',
+    notes: 'Home BP monitoring recommended.',
   },
   {
     id: 'hc-002',
@@ -324,6 +349,18 @@ export const healthConditions: HealthCondition[] = [
     status: 'active',
     severity: 'severe',
     notes: 'IgE-mediated allergy. Strict avoidance of all shellfish. Epinephrine auto-injector available.',
+  },
+
+  // Emma's conditions (Fix 1: Adding missing health data)
+  {
+    id: 'hc-010',
+    patientId: 'user-004',
+    name: 'Healthy - No Chronic Conditions',
+    icd10Code: 'Z00.129',
+    dateDiagnosed: '2025-08-15',
+    status: 'active',
+    severity: 'mild',
+    notes: 'Normal growth and development. Up to date on vaccinations. No chronic health conditions.',
   },
 ];
 

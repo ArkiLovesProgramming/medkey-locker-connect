@@ -29,19 +29,6 @@ export const notifications: Notification[] = [
   },
   {
     id: 'notif-003',
-    type: 'medication-reminder',
-    title: 'Time to Take Your Medication',
-    message: 'Sarah, it\'s time to take Lisinopril 10mg',
-    read: true,
-    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-    actionUrl: '/medications',
-    metadata: {
-      medicationId: 'med-004',
-      prescriptionId: 'rx-003',
-    },
-  },
-  {
-    id: 'notif-004',
     type: 'message',
     title: 'New Message from Pharmacist',
     message: 'Dr. Michael Chen sent you a message about Amoxicillin',
@@ -77,19 +64,6 @@ export const notifications: Notification[] = [
   },
   {
     id: 'notif-007',
-    type: 'refill-reminder',
-    title: 'Refill Reminder: Lisinopril',
-    message: 'Sarah\'s Lisinopril needs approval. Please review and approve.',
-    read: false,
-    timestamp: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(), // 30 hours ago
-    actionUrl: '/prescriptions',
-    metadata: {
-      medicationId: 'med-004',
-      prescriptionId: 'rx-003',
-    },
-  },
-  {
-    id: 'notif-008',
     type: 'appointment',
     title: 'Upcoming Appointment Reminder',
     message: 'Medication review appointment scheduled for Oct 28 at 3:00 PM',

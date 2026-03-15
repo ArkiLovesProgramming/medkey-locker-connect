@@ -190,14 +190,17 @@ export {
 // Dashboard Data Helper
 import { DashboardData, ActivityItem, ActionItem } from '@/types';
 import { activeMedications, pastMedications, medicationDatabase } from './mockMedications';
-import { getPrescriptionsNeedingApproval, getPrescriptionsDueForRefill } from './mockPrescriptions';
-import { getUnreadNotifications, notifications } from './mockNotifications';
-import { getChatById, chatConversations } from './mockChatMessages';
-import { getUpcomingAppointments, getMissedDoses, appointments } from './mockAppointments';
+import { prescriptions, getPrescriptionsNeedingApproval, getPrescriptionsDueForRefill, getActivePrescriptions } from './mockPrescriptions';
+import { getUnreadNotifications, notifications, getUnreadCount } from './mockNotifications';
+import { chatConversations } from './mockChatMessages';
+import { getUpcomingAppointments, appointments } from './mockAppointments';
+import { getMissedDoses } from './mockMedicationAdherence';
 import { getDueVaccinations, vaccinationRecords } from './mockVaccinations';
 import { getAbnormalLabResults, labResults } from './mockLabResults';
 import { medicalRecords, healthConditions } from './mockMedicalRecords';
 import { vitalSigns } from './mockVitalSigns';
+import { pickupOrders, getActiveOrders } from './mockPickupOrders';
+import { familyMembers } from './mockUsers';
 
 export function getDashboardData(): DashboardData {
   const activeMeds = activeMedications;
@@ -257,10 +260,10 @@ export function getDashboardData(): DashboardData {
     {
       id: 'action-003',
       type: 'approve',
-      title: 'Lisinopril Needs Approval',
+      title: 'Rosuvastatin Needs Approval',
       description: 'New prescription requires approval',
       priority: 'high',
-      prescriptionId: 'rx-003',
+      prescriptionId: 'rx-009',
     },
   ];
   

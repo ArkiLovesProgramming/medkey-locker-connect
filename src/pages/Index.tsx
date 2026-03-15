@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import FamilyDashboard from "@/components/FamilyDashboard";
@@ -8,6 +8,7 @@ import LockerUnlockedView from "@/components/LockerUnlockedView";
 import MedicineCabinet from "@/components/MedicineCabinet";
 import PharmacistChat from "@/components/PharmacistChat";
 import ProfileScreen from "@/components/ProfileScreen";
+import PrescriptionApprovedView from "@/components/PrescriptionApprovedView";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -15,7 +16,10 @@ const Index = () => {
   const [activeScreen, setActiveScreen] = useState(initialScreen);
   const [selectedPrescriptionId, setSelectedPrescriptionId] = useState<string | undefined>(undefined);
   const [showUnlockedView, setShowUnlockedView] = useState(false);
-  
+  const [showApprovedView, setShowApprovedView] = useState(false);
+  const [approvedPrescriptionId, setApprovedPrescriptionId] = useState<string | undefined>(undefined);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   // Update activeScreen when URL parameter changes
   useEffect(() => {
     const screenParam = searchParams.get('screen');
@@ -24,22 +28,59 @@ const Index = () => {
     }
   }, [searchParams]);
 
+  // Scroll to top when navigating to approved view
+  useEffect(() => {
+    if (showApprovedView) {
+      // Use setTimeout to ensure DOM is fully rendered before scrolling
+      const timer = setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        window.scrollTo(0, 0);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [showApprovedView]);
+
+  // Scroll to top when screen changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
+      }
+      window.scrollTo(0, 0);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [activeScreen]);
+
   // Handle navigation with prescription ID
   const handleNavigate = (screen: number, prescriptionId?: string) => {
     if (prescriptionId) {
       setSelectedPrescriptionId(prescriptionId);
+      // Check if navigating to approved view (screen 7)
+      if (screen === 7) {
+        setApprovedPrescriptionId(prescriptionId);
+        setShowApprovedView(true);
+        return;
+      }
     }
     setActiveScreen(screen);
   };
 
   return (
-    <div className="max-w-md mx-auto min-h-screen relative bg-background overflow-hidden shadow-2xl">
-      <div className="overflow-y-auto min-h-screen">
+    <div className="max-w-md mx-auto min-h-screen relative bg-background shadow-2xl" style={{ overflowX: 'visible' }}>
+      <div ref={scrollContainerRef} className="overflow-y-auto min-h-screen">
         {/* Show unlocked view if scanning was successful */}
         {showUnlockedView ? (
           <LockerUnlockedView
             onNavigate={setActiveScreen}
             onBack={() => setShowUnlockedView(false)}
+          />
+        ) : showApprovedView ? (
+          <PrescriptionApprovedView
+            onNavigate={setActiveScreen}
+            onBack={() => setShowApprovedView(false)}
+            prescriptionId={approvedPrescriptionId}
           />
         ) : (
           <>
@@ -57,7 +98,7 @@ const Index = () => {
           </>
         )}
       </div>
-      {!showUnlockedView && <BottomNav activeScreen={activeScreen} onNavigate={setActiveScreen} />}
+      {!showUnlockedView && !showApprovedView && <BottomNav activeScreen={activeScreen} onNavigate={setActiveScreen} />}
     </div>
   );
 };

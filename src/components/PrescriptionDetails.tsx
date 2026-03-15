@@ -7,31 +7,33 @@ import {
   Calendar,
   Clock,
   ShieldCheck,
+  ShieldX,
   Info,
   Check,
   RotateCcw,
   ChevronRight,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { Prescription } from "@/types";
 import { prescriptions } from "@/data/mockPrescriptions";
 
 interface PrescriptionDetailsProps {
   prescriptionId?: string;
-  onNavigate: (screen: number) => void;
+  onNavigate: (screen: number, prescriptionId?: string) => void;
 }
 
 const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetailsProps) => {
-  const [approved, setApproved] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [showDrugInfo, setShowDrugInfo] = useState(false);
+  const [showDenialDetails, setShowDenialDetails] = useState<Record<number, boolean>>({});
 
   // Find the prescription from mock data
   const rx = prescriptions.find(p => p.id === prescriptionId) || 
              prescriptions[0];
 
   const handleApprove = () => {
-    setApproved(true);
+    // Navigate to the approval confirmation view (screen 7) immediately
+    onNavigate(7, prescriptionId);
     toast({
       title: "Prescription Approved",
       description: `${rx.medicationName} fill has been approved. You'll be notified when it's ready.`,
@@ -235,33 +237,73 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                 <span className="font-semibold text-foreground">${rx.financials.totalCost.toFixed(2)}</span>
               </div>
 
-              {/* Insurance Coverage Items - Support multiple insurance plans */}
-              {rx.financials.coverageReason?.includes('Blue Cross') && rx.financials.coverageReason?.includes('Sunlife') ? (
-                <>
-                  <div className="bg-success-light rounded-xl p-3 flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-success" />
-                      <span className="text-sm font-medium text-foreground">Blue Cross (75%)</span>
-                    </div>
-                    <span className="font-bold text-success">-${(rx.financials.totalCost * 0.75).toFixed(2)}</span>
-                  </div>
-                  <div className="bg-success-light rounded-xl p-3 flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-success" />
-                      <span className="text-sm font-medium text-foreground">Sunlife (25%)</span>
-                    </div>
-                    <span className="font-bold text-success">-${(rx.financials.totalCost * 0.25).toFixed(2)}</span>
-                  </div>
-                </>
-              ) : rx.financials.coverageItems && rx.financials.coverageItems.length > 0 ? (
+              {/* Insurance Coverage Items - Support multiple insurance plans and denial */}
+              {rx.financials.coverageItems && rx.financials.coverageItems.length > 0 ? (
                 <>
                   {rx.financials.coverageItems.map((item, index) => (
-                    <div key={index} className="bg-success-light rounded-xl p-3 flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-4 h-4 text-success" />
-                        <span className="text-sm font-medium text-foreground">{item.provider} ({item.percentage}%)</span>
-                      </div>
-                      <span className="font-bold text-success">-${item.amount.toFixed(2)}</span>
+                    <div key={index}>
+                      {/* Denied Coverage Item */}
+                      {item.isDenied ? (
+                        <div className="bg-destructive/10 rounded-xl p-3 mb-2 border border-destructive/20">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <ShieldX className="w-4 h-4 text-destructive" />
+                              <span className="text-sm font-medium text-foreground">{item.provider}</span>
+                            </div>
+                            <span className="font-bold text-destructive">${item.amount.toFixed(2)}</span>
+                          </div>
+
+                          {/* Collapsible Denial Details */}
+                          <button
+                            onClick={() => setShowDenialDetails(prev => ({ ...prev, [index]: !prev[index] }))}
+                            className="w-full flex items-center justify-between text-xs text-destructive hover:text-destructive/80 transition-colors"
+                          >
+                            <span className="flex items-center gap-1">
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              Reason: {item.denialReason || 'Coverage Denied'}
+                            </span>
+                            <ChevronRight className={`w-4 h-4 transition-transform ${showDenialDetails[index] ? 'rotate-90' : ''}`} />
+                          </button>
+
+                          {showDenialDetails[index] && (
+                            <div className="mt-2 pt-2 border-t border-destructive/20 space-y-2">
+                              {item.denialDetails && (
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                  {item.denialDetails}
+                                </p>
+                              )}
+                              {item.solution && (
+                                <div className="flex items-start gap-1.5">
+                                  <Check className="w-3.5 h-3.5 text-success flex-shrink-0 mt-0.5" />
+                                  <p className="text-xs text-success font-medium">{item.solution}</p>
+                                </div>
+                              )}
+                              {item.contactPhone && (
+                                <a
+                                  href={`tel:${item.contactPhone}`}
+                                  className="flex items-center gap-1.5 text-xs text-primary hover:underline mt-1"
+                                  onClick={() => toast({
+                                    title: "Calling Insurance",
+                                    description: `Connecting to ${item.provider} at ${item.contactPhone}...`,
+                                  })}
+                                >
+                                  <Phone className="w-3.5 h-3.5" />
+                                  {item.contactPhone}
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        /* Normal Coverage Item */
+                        <div className="bg-success-light rounded-xl p-3 flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <ShieldCheck className="w-4 h-4 text-success" />
+                            <span className="text-sm font-medium text-foreground">{item.provider} ({item.percentage}%)</span>
+                          </div>
+                          <span className="font-bold text-success">-${item.amount.toFixed(2)}</span>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </>
@@ -275,18 +317,12 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                 </div>
               ) : null}
 
-              {/* Coverage Reason */}
-              {rx.financials.coverageReason && (
-                <div className="flex items-center gap-1.5 mb-3 px-1">
-                  <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground italic">Reason: {rx.financials.coverageReason}</span>
-                </div>
-              )}
-
               <div className="border-t border-dashed border-border my-3" />
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="font-semibold text-foreground text-sm">Your Co-pay</p>
+                  <p className="font-semibold text-foreground text-sm">
+                    {rx.financials.coverageItems?.some(item => item.isDenied) ? 'Your Cost (Full Price)' : 'Your Co-pay'}
+                  </p>
                   <p className="text-xs text-muted-foreground">Due at pickup</p>
                 </div>
                 <span className={`text-3xl font-bold ${rx.financials.copay === 0 ? 'text-success' : 'text-foreground'}`}>
@@ -318,45 +354,64 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
 
         {/* Status Indicator */}
         <div className="flex items-center justify-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${approved ? 'bg-teal-dark' : rx.status === 'needs-approval' ? 'bg-success animate-pulse' : 'bg-teal-dark'}`} />
+          <span className={`w-2 h-2 rounded-full ${rx.status === 'needs-approval' ? 'bg-success animate-pulse' : 'bg-teal-dark'}`} />
           <span className="text-sm text-muted-foreground">
-            {approved ? 'Approved' : rx.status === 'needs-approval' ? 'Ready for review' : 'Ready for pickup'}
+            {rx.status === 'needs-approval' ? 'Ready for review' : 'Ready for pickup'}
           </span>
         </div>
 
         {/* Bottom Actions */}
         <div className="pt-2 pb-4 space-y-3">
-          {/* Approve Fill Button */}
-          <button
-            onClick={handleApprove}
-            disabled={approved}
-            className={`w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 ${
-              approved
-                ? 'bg-success text-primary-foreground'
-                : 'bg-teal-dark text-primary-foreground'
-            }`}
-          >
-            {approved ? (
-              <>
+          {/* Check if any coverage is denied */}
+          {rx.financials?.coverageItems?.some(item => item.isDenied) ? (
+            <>
+              {/* Override & Pay Full Price Button */}
+              <button
+                onClick={handleApprove}
+                className="w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 bg-amber-500 text-white hover:bg-amber-600"
+              >
+                Override & Pay Full Price
                 <Check className="w-5 h-5" />
-                Approved
-              </>
-            ) : (
-              <>
+              </button>
+
+              {/* Call Insurance Button */}
+              {rx.financials.coverageItems.find(item => item.isDenied)?.contactPhone && (
+                <button
+                  onClick={() => {
+                    const deniedItem = rx.financials?.coverageItems?.find(item => item.isDenied);
+                    toast({
+                      title: "Calling Insurance",
+                      description: `Connecting to ${deniedItem?.provider} at ${deniedItem?.contactPhone}...`,
+                    });
+                  }}
+                  className="w-full bg-card border border-border text-foreground font-semibold text-base py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.97] transition-all duration-200 shadow-sm"
+                >
+                  <Phone className="w-5 h-5" />
+                  Call Insurance Provider
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Approve Fill Button */}
+              <button
+                onClick={handleApprove}
+                className="w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 bg-teal-dark text-primary-foreground"
+              >
                 Approve Fill
                 <Check className="w-5 h-5" />
-              </>
-            )}
-          </button>
+              </button>
 
-          {/* Call Pharmacy Button */}
-          <button
-            onClick={handleCallPharmacy}
-            className="w-full bg-card border border-border text-foreground font-semibold text-base py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.97] transition-all duration-200 shadow-sm"
-          >
-            <Phone className="w-5 h-5" />
-            Call Pharmacy
-          </button>
+              {/* Call Pharmacy Button */}
+              <button
+                onClick={handleCallPharmacy}
+                className="w-full bg-card border border-border text-foreground font-semibold text-base py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.97] transition-all duration-200 shadow-sm"
+              >
+                <Phone className="w-5 h-5" />
+                Call Pharmacy
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
