@@ -148,7 +148,7 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
       </div>
 
       {/* 成功状态区 */}
-      <div className="text-center py-4 bg-gradient-to-b from-teal-light/20 to-transparent rounded-b-3xl">
+      <div className="text-center py-4 bg-gradient-to-b from-background via-background to-transparent rounded-b-3xl">
         <div className="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce-slow">
           <LockOpen className="w-10 h-10 text-teal-dark" />
         </div>
