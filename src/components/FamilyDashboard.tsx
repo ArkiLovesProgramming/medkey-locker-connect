@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { ChevronRight, CheckCircle, AlertCircle, Clock, Check } from "lucide-react";
 import { AvatarSVG } from "@/assets/AvatarSVG";
 import { useFamilyMembers, useMedications } from "@/hooks/useData";
@@ -65,12 +65,7 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
       {/* Family Members */}
       <div className="relative mb-6">
         <p className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">Family Members</p>
-        <div 
-          ref={scrollRef}
-          className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" 
-          style={{ scrollSnapType: 'x-mandatory' }}
-          onScroll={handleScroll}
-        >
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide touch-smooth-scroll" style={{ scrollSnapType: 'x-mandatory' }}>
           {displayMembers.map((m) => {
             const isSelected = selectedMember === m.id;
             return (

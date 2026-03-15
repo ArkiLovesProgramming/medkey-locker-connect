@@ -68,8 +68,8 @@ const Index = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto min-h-screen relative bg-background shadow-2xl" style={{ overflowX: 'visible' }}>
-      <div ref={scrollContainerRef} className="overflow-y-auto min-h-screen">
+    <div className="mx-auto min-h-screen relative bg-background shadow-2xl" style={{ maxWidth: '480px', overflowX: 'visible' }}>
+      <div ref={scrollContainerRef} className="overflow-y-auto min-h-screen" style={{ overflowX: 'visible' }}>
         {/* Show unlocked view if scanning was successful */}
         {showUnlockedView ? (
           <LockerUnlockedView
