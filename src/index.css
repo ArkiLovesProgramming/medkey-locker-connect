@@ -404,6 +404,23 @@
              env(safe-area-inset-bottom) 
              env(safe-area-inset-left);
   }
+  
+  .safe-area-inset-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+  
+  /* Mobile Responsive Utilities */
+  @media (max-width: 640px) {
+    .mobile-px {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .mobile-py {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {

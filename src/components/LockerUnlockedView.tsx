@@ -132,16 +132,19 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
 
   return (
     <div className="min-h-screen bg-background pb-6">
-      {/* 顶部导航栏 */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-3">
-        <button
-          onClick={handleBack}
-          className="p-2 active:scale-90 transition-transform"
-        >
-          <ArrowLeft className="w-6 h-6 text-foreground" />
-        </button>
-        <h2 className="font-semibold text-base text-foreground">Pickup</h2>
-        <div className="w-10" /> {/* 占位保持居中 */}
+      {/* 顶部导航栏 - 移动端优化 */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/40">
+        <div className="flex items-center justify-between px-4 py-3 safe-area-inset-top">
+          <button
+            onClick={handleBack}
+            className="p-2 -ml-2 active:scale-90 transition-transform touch-feedback"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="w-6 h-6 text-foreground" />
+          </button>
+          <h2 className="font-semibold text-base text-foreground">Pickup</h2>
+          <div className="w-10" /> {/* 占位保持居中 */}
+        </div>
       </div>
 
       {/* 成功状态区 */}

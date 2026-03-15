@@ -50,16 +50,19 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
   const displayMembers = [...allMembersOption, ...(familyMembers || [])];
 
   return (
-    <div className="pb-24 px-5 pt-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Family Dashboard</h1>
-        <button
-          onClick={() => onNavigate(6)}
-          className="w-11 h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform"
-        >
-          <span className="text-sm font-semibold text-teal-dark">SJ</span>
-        </button>
+    <div className="pb-24 px-4 pt-4 safe-area-inset-top">
+      {/* Header - 移动端优化 */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm pb-4 mb-2">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">Family Dashboard</h1>
+          <button
+            onClick={() => onNavigate(6)}
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-teal-light flex items-center justify-center border-2 border-border active:scale-95 transition-transform touch-feedback flex-shrink-0"
+            aria-label="Profile settings"
+          >
+            <span className="text-xs sm:text-sm font-semibold text-teal-dark">SJ</span>
+          </button>
+        </div>
       </div>
 
       {/* Family Members */}
