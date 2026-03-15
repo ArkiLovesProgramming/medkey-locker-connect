@@ -26,9 +26,8 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
   const [showMore, setShowMore] = useState(false);
   const [showDrugInfo, setShowDrugInfo] = useState(false);
 
-  // Find the prescription from mock data, fallback to first needs-approval prescription
+  // Find the prescription from mock data
   const rx = prescriptions.find(p => p.id === prescriptionId) || 
-             prescriptions.find(p => p.status === 'needs-approval') || 
              prescriptions[0];
 
   const handleApprove = () => {
@@ -115,25 +114,21 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
         )}
 
         {/* Medication Info */}
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center">
+        <div className="flex items-start gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center flex-shrink-0">
             <Pill className="w-7 h-7 text-primary-foreground" />
           </div>
-          <div className="flex-1">
-            <h3 className="text-primary-foreground text-xl font-bold">{rx.medicationName} {rx.strength}</h3>
-            <p className="text-primary-foreground/80 text-sm">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-primary-foreground text-xl font-bold leading-tight">{rx.medicationName} {rx.strength}</h3>
+            <p className="text-primary-foreground/80 text-sm mt-1">
               {rx.quantity} Tablets · {rx.frequency}
             </p>
             {rx.notes && (
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber" />
-                <p className="text-primary-foreground/80 text-sm">{rx.notes.split('.')[0]}</p>
+              <div className="flex items-start gap-1.5 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber mt-1.5 flex-shrink-0" />
+                <p className="text-primary-foreground/80 text-sm leading-relaxed">{rx.notes.split('.')[0]}</p>
               </div>
             )}
-          </div>
-          {/* Prescription ID Badge */}
-          <div className="text-right">
-            <span className="text-primary-foreground/60 text-xs">{rx.rxNumber}</span>
           </div>
         </div>
       </div>

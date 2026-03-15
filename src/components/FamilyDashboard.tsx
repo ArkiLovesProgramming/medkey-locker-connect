@@ -122,7 +122,7 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
           activeMeds.slice(0, 3).map((med) => (
             <button
               key={med.prescriptionId}
-              onClick={() => onNavigate(2)}
+              onClick={() => onNavigate(2, med.prescriptionId)}
               className="w-full bg-card rounded-2xl p-4 shadow-sm mb-3 text-left active:scale-[0.98] transition-transform duration-150"
             >
               <div className="flex items-start gap-3">

@@ -16,7 +16,7 @@ const PharmacistChat = ({ onNavigate }: PharmacistChatProps) => {
   const { data: quickRepliesData } = useQuickReplies();
   
   // Use first conversation or default to chat-001
-  const activeChatId = conversations && conversations.length > 0 ? conversations[0].id : "chat-001";
+  const activeChatId = conversations && conversations.length > 0 ? conversations[0].id : (user?.id ? `chat-${user.id}` : "chat-001");
   const { messages, conversation, isTyping, sendMessage, sendQuickReply, handleSubmit, messagesEndRef, inputValue, setInputValue } = useChat({
     chatId: activeChatId,
     userId: user?.id || "user-001",

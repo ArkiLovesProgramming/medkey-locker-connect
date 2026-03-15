@@ -149,7 +149,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                     </div>
                     <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border">
                       <button
-                        onClick={() => onNavigate(2)}
+                        onClick={() => onNavigate(2, med.prescriptionId)}
                         className="text-sm font-semibold text-teal-mid active:opacity-70 transition-opacity"
                       >
                         View Details

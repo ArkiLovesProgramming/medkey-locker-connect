@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 
 interface SecureLockerPickupProps {
   onNavigate: (screen: number) => void;
+  onScanSuccess?: () => void;
 }
 
 const QRCodePlaceholder = () => {
@@ -38,7 +39,7 @@ const QRCodePlaceholder = () => {
   );
 };
 
-const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
+const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupProps) => {
   const [timeLeft, setTimeLeft] = useState(14 * 60 + 59);
   const [copied, setCopied] = useState(false);
 
@@ -57,6 +58,17 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
     setCopied(true);
     toast({ title: "📋 Copied!", description: "Order number copied to clipboard." });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleScan = () => {
+    toast({
+      title: "Scanning...",
+      description: "Please wait while we verify your QR code",
+    });
+    
+    setTimeout(() => {
+      onScanSuccess?.();
+    }, 1000);
   };
 
   return (
@@ -114,7 +126,10 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
       </div>
 
       {/* Single Action Button - Compact */}
-      <button className="w-full bg-teal-dark text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-medkey-md mb-4">
+      <button
+        onClick={handleScan}
+        className="w-full bg-teal-dark text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-medkey-md mb-4"
+      >
         <Scan className="w-5 h-5" />
         Scan at Locker (Mock)
       </button>
@@ -130,12 +145,12 @@ const SecureLockerPickup = ({ onNavigate }: SecureLockerPickupProps) => {
 
         <div className="space-y-2">
           {[
-            { name: "Lily Jenkins", med: "Amoxicillin (Qty: 14)" },
-            { name: "David Jenkins", med: "Atorvastatin (Qty: 30)" },
+            { name: "Lily Jenkins", med: "Amoxicillin (Qty: 14)", prescriptionId: "rx-001" },
+            { name: "David Jenkins", med: "Atorvastatin (Qty: 30)", prescriptionId: "rx-002" },
           ].map((item) => (
             <button
               key={item.name}
-              onClick={() => onNavigate(2)}
+              onClick={() => onNavigate(2, item.prescriptionId)}
               className="w-full bg-white rounded-xl p-3 shadow-sm border border-border/50 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
             >
               <div className="w-10 h-10 rounded-full bg-teal-light/30 flex items-center justify-center flex-shrink-0">
