@@ -148,11 +148,11 @@ export const pickupOrders: PickupOrder[] = [
     createdAt: '2025-10-21T15:30:00Z',
   },
   // New orders from prescription images
-  // Order for rx-009: Rosuvastatin (David Jenkins)
+  // Order for rx-009: Rosuvastatin (David Jenkins) - processing (not ready)
   {
     id: 'order-007',
     orderNumber: '38472-C',
-    status: 'ready',
+    status: 'processing',
     items: [
       {
         prescriptionId: 'rx-009',
@@ -168,11 +168,11 @@ export const pickupOrders: PickupOrder[] = [
     pharmacy: pharmacies['medkey-main'],
     createdAt: '2026-03-15T10:00:00Z',
   },
-  // Order for rx-010: Amoxicillin (Sarah Jenkins)
+  // Order for rx-010: Amoxicillin (Sarah Jenkins) - processing (not ready)
   {
     id: 'order-008',
     orderNumber: '38473-D',
-    status: 'ready',
+    status: 'processing',
     items: [
       {
         prescriptionId: 'rx-010',
