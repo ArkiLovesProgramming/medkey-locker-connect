@@ -102,28 +102,28 @@ export const autoReplies: Record<string, string> = {
   
   'interactions-amoxicillin': "Amoxicillin may interact with blood thinners like Warfarin, methotrexate, and probenecid. It may also reduce the effectiveness of birth control pills. Please inform us of all medications you're taking.",
   
-  'interactions-atorvastatin': "Atorvastatin interacts with grapefruit products (avoid consuming), certain antibiotics, antifungals, and other cholesterol medications. Always check with us before starting new medications.",
+  'interactions-atorvastatin': "Rosuvastatin interacts with grapefruit products (avoid consuming), certain antibiotics, antifungals, and other cholesterol medications. Always check with us before starting new medications.",
   
   // Dosage instructions
   'dosage-general': "Always follow the dosage instructions on your prescription label. Take at the same time(s) each day for best results. Do not exceed the prescribed dose.",
   
   'dosage-amoxicillin': "Take Amoxicillin every 8 hours (3 times daily) for the full prescribed course, usually 7-10 days. Complete the entire course even if you feel better to prevent antibiotic resistance.",
   
-  'dosage-atorvastatin': "Take Atorvastatin once daily in the evening for best results. Can be taken with or without food. Avoid grapefruit products as they can increase drug levels.",
+  'dosage-atorvastatin': "Take Rosuvastatin once daily in the evening for best results. Can be taken with or without food. Avoid grapefruit products as they can increase drug levels.",
   
   // Food interactions
   'food-general': "Some medications should be taken with food to reduce stomach upset, while others work best on an empty stomach. Check your specific medication instructions or ask me for details.",
   
   'food-amoxicillin': "Amoxicillin can be taken with or without food. Taking it with food may help reduce stomach upset. Complete the full course regardless of meals.",
   
-  'food-atorvastatin': "Atorvastatin can be taken with or without food. However, avoid grapefruit and grapefruit juice as they can significantly increase drug levels and side effects.",
+  'food-atorvastatin': "Rosuvastatin can be taken with or without food. However, avoid grapefruit and grapefruit juice as they can significantly increase drug levels and side effects.",
   
   // Missed dose
   'missed-dose-general': "If you miss a dose, take it as soon as you remember. If it's almost time for your next dose, skip the missed dose. Do not double up to make up for a missed dose.",
   
   'missed-dose-amoxicillin': "If you miss a dose of Amoxicillin, take it as soon as you remember. If it's within 2 hours of your next dose, skip the missed dose. Continue your regular schedule. Do not take two doses at once.",
   
-  'missed-dose-atorvastatin': "If you miss a dose of Atorvastatin, take it as soon as you remember. If it's been more than 12 hours or close to your next dose, skip it. Resume your regular schedule the next day.",
+  'missed-dose-atorvastatin': "If you miss a dose of Rosuvastatin, take it as soon as you remember. If it's been more than 12 hours or close to your next dose, skip it. Resume your regular schedule the next day.",
   
   // Pregnancy/breastfeeding
   'pregnancy': "Medication safety during pregnancy and breastfeeding varies greatly. Please consult with your doctor and pharmacist before taking any medication during pregnancy or while breastfeeding.",
@@ -227,7 +227,7 @@ export const chatConversations: PharmacistChat[] = [
         conversationId: 'chat-002',
         senderId: 'user-002',
         senderType: 'user',
-        text: 'I take Atorvastatin',
+        text: 'I take Rosuvastatin',
         timestamp: '2025-10-20T15:19:45Z',
         read: true,
       },
@@ -236,7 +236,7 @@ export const chatConversations: PharmacistChat[] = [
         conversationId: 'chat-002',
         senderId: 'pharm-003',
         senderType: 'pharmacist',
-        text: 'Good news! Metformin and Atorvastatin are commonly prescribed together and don\'t have significant interactions. Just make sure to take Metformin with meals to reduce stomach upset. Continue monitoring your blood sugar as directed.',
+        text: 'Good news! Metformin and Rosuvastatin are commonly prescribed together and don\'t have significant interactions. Just make sure to take Metformin with meals to reduce stomach upset. Continue monitoring your blood sugar as directed.',
         timestamp: '2025-10-20T15:21:00Z',
         read: true,
       },

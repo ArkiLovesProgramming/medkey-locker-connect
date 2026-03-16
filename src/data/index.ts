@@ -233,7 +233,7 @@ export function getDashboardData(): DashboardData {
     {
       id: 'activity-004',
       type: 'prescription',
-      description: 'Prescription approved for Atorvastatin',
+      description: 'Prescription approved for Rosuvastatin',
       timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
       memberId: 'user-002',
     },
@@ -251,10 +251,10 @@ export function getDashboardData(): DashboardData {
     {
       id: 'action-002',
       type: 'refill',
-      title: 'Atorvastatin Refill Due',
+      title: 'Rosuvastatin Refill Due',
       description: 'Refill due 2025-10-25',
       priority: 'urgent',
-      medicationId: 'med-003',
+      medicationId: 'med-016',
       prescriptionId: 'rx-002',
     },
     {

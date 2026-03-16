@@ -51,7 +51,7 @@ export const pickupOrders: PickupOrder[] = [
       },
       {
         prescriptionId: 'rx-002',
-        medicationName: 'Atorvastatin 20mg',
+        medicationName: 'Rosuvastatin 20mg',
         quantity: 30,
         patientName: 'David Jenkins',
       },
@@ -70,7 +70,7 @@ export const pickupOrders: PickupOrder[] = [
     items: [
       {
         prescriptionId: 'rx-002',
-        medicationName: 'Atorvastatin 20mg',
+        medicationName: 'Rosuvastatin 20mg',
         quantity: 90,
         patientName: 'David Jenkins',
       },

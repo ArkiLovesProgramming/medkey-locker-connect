@@ -15,6 +15,7 @@ const Index = () => {
   const initialScreen = parseInt(searchParams.get('screen') || '1', 10);
   const [activeScreen, setActiveScreen] = useState(initialScreen);
   const [selectedPrescriptionId, setSelectedPrescriptionId] = useState<string | undefined>(undefined);
+  const [selectedOrderNumber, setSelectedOrderNumber] = useState<string | undefined>(undefined);
   const [showUnlockedView, setShowUnlockedView] = useState(false);
   const [showApprovedView, setShowApprovedView] = useState(false);
   const [approvedPrescriptionId, setApprovedPrescriptionId] = useState<string | undefined>(undefined);
@@ -77,8 +78,9 @@ const Index = () => {
         {/* Show unlocked view if scanning was successful */}
         {showUnlockedView ? (
           <LockerUnlockedView
-            onNavigate={setActiveScreen}
+            onNavigate={handleNavigate}
             onBack={() => setShowUnlockedView(false)}
+            orderNumber={selectedOrderNumber}
           />
         ) : showApprovedView ? (
           <PrescriptionApprovedView
@@ -93,7 +95,10 @@ const Index = () => {
             {activeScreen === 3 && (
               <SecureLockerPickup
                 onNavigate={handleNavigate}
-                onScanSuccess={() => setShowUnlockedView(true)}
+                onScanSuccess={(orderNumber) => {
+                  setSelectedOrderNumber(orderNumber);
+                  setShowUnlockedView(true);
+                }}
               />
             )}
             {activeScreen === 4 && <MedicineCabinet onNavigate={handleNavigate} />}

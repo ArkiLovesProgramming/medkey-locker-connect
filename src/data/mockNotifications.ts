@@ -17,13 +17,13 @@ export const notifications: Notification[] = [
   {
     id: 'notif-002',
     type: 'refill-reminder',
-    title: 'Refill Reminder: Atorvastatin',
-    message: 'David\'s Atorvastatin refill is due. Request your refill now.',
+    title: 'Refill Reminder: Rosuvastatin',
+    message: 'David\'s Rosuvastatin refill is due. Request your refill now.',
     read: false,
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
     actionUrl: '/medications',
     metadata: {
-      medicationId: 'med-003',
+      medicationId: 'med-016',
       prescriptionId: 'rx-002',
     },
   },
@@ -43,7 +43,7 @@ export const notifications: Notification[] = [
     id: 'notif-005',
     type: 'prescription-ready',
     title: 'Prescription Ready for Pickup',
-    message: 'Atorvastatin and Metformin for David are ready for pickup at locker B-05',
+    message: 'Rosuvastatin and Metformin for David are ready for pickup at locker B-05',
     read: true,
     timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
     actionUrl: '/pickup',

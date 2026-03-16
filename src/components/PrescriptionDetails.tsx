@@ -197,12 +197,12 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
               <h4 className="font-bold text-foreground">Scheduled Pickup</h4>
             </div>
             <div className="bg-card rounded-2xl p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
+              {/* Pickup Status */}
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs text-muted-foreground">Estimated Ready Time</p>
-                  <p className="font-bold text-lg text-foreground">
-                    {formatDateTime(rx.pickupInfo.estimatedReadyTime)}
-                  </p>
+                  <p className="text-xs text-muted-foreground mb-1">Pickup Status</p>
+                  <p className="font-semibold text-foreground">Ready for Scheduling</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Select a convenient time for your pickup below.</p>
                 </div>
                 <button
                   onClick={() => toast({ title: "Calendar", description: "Opening date picker..." })}
@@ -211,12 +211,13 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                   <Calendar className="w-5 h-5 text-teal-dark" />
                 </button>
               </div>
+              {/* Select Pickup Time Button */}
               <button
-                onClick={() => toast({ title: "Request Sent", description: "We'll try to prepare your order earlier." })}
+                onClick={() => toast({ title: "Select Pickup Time", description: "Opening time picker..." })}
                 className="w-full bg-teal-light text-teal-dark font-semibold text-sm py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
               >
-                <RotateCcw className="w-4 h-4" />
-                Request Earlier Pickup
+                <Clock className="w-4 h-4" />
+                Select Pickup Time
               </button>
             </div>
           </div>
@@ -244,19 +245,21 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                     <div key={index}>
                       {/* Denied Coverage Item */}
                       {item.isDenied ? (
-                        <div className="bg-destructive/10 rounded-xl p-3 mb-2 border border-destructive/20">
+                        <div className="bg-amber-50 rounded-xl p-3 mb-2 border border-amber-200">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <ShieldX className="w-4 h-4 text-destructive" />
+                              <div className="w-4 h-4 rounded-full border-2 border-amber-500 flex items-center justify-center">
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              </div>
                               <span className="text-sm font-medium text-foreground">{item.provider}</span>
                             </div>
-                            <span className="font-bold text-destructive">${item.amount.toFixed(2)}</span>
+                            <span className="font-bold text-amber-600">-${item.amount.toFixed(2)}</span>
                           </div>
 
                           {/* Collapsible Denial Details */}
                           <button
                             onClick={() => setShowDenialDetails(prev => ({ ...prev, [index]: !prev[index] }))}
-                            className="w-full flex items-center justify-between text-xs text-destructive hover:text-destructive/80 transition-colors"
+                            className="w-full flex items-center justify-between text-xs text-amber-700 hover:text-amber-800 transition-colors"
                           >
                             <span className="flex items-center gap-1">
                               <AlertCircle className="w-3.5 h-3.5" />
@@ -267,32 +270,13 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
 
                           {showDenialDetails[index] && (
                             <div className="mt-2 space-y-2">
-                              <div className="bg-muted/50 rounded-lg p-3 space-y-3">
+                              <div className="bg-white rounded-lg p-3 space-y-3 border border-amber-100">
                                 {item.denialDetails && (
                                   <p className="text-sm text-muted-foreground leading-relaxed">
                                     {item.denialDetails}
                                   </p>
                                 )}
-                                {item.solution && (
-                                  <div className="flex items-start gap-2">
-                                    <Check className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
-                                    <p className="text-sm text-success font-medium">{item.solution}</p>
-                                  </div>
-                                )}
                               </div>
-                              {item.contactPhone && (
-                                <a
-                                  href={`tel:${item.contactPhone}`}
-                                  className="flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-                                  onClick={() => toast({
-                                    title: "Calling Insurance",
-                                    description: `Connecting to ${item.provider} at ${item.contactPhone}...`,
-                                  })}
-                                >
-                                  <Phone className="w-4 h-4" />
-                                  Call Blue Cross: {item.contactPhone}
-                                </a>
-                              )}
                             </div>
                           )}
                         </div>
@@ -370,28 +354,20 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
               {/* Override & Pay Full Price Button */}
               <button
                 onClick={handleApprove}
-                className="w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 bg-amber-500 text-white hover:bg-amber-600"
+                className="w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-md active:scale-[0.97] transition-all duration-200 bg-amber-400 text-amber-900 hover:bg-amber-500"
               >
                 Override & Pay Full Price
-                <Check className="w-5 h-5" />
+                <ChevronRight className="w-5 h-5" />
               </button>
 
-              {/* Call Insurance Button */}
-              {rx.financials.coverageItems.find(item => item.isDenied)?.contactPhone && (
-                <button
-                  onClick={() => {
-                    const deniedItem = rx.financials?.coverageItems?.find(item => item.isDenied);
-                    toast({
-                      title: "Calling Insurance",
-                      description: `Connecting to ${deniedItem?.provider} at ${deniedItem?.contactPhone}...`,
-                    });
-                  }}
-                  className="w-full bg-card border border-border text-foreground font-semibold text-base py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.97] transition-all duration-200 shadow-sm"
-                >
-                  <Phone className="w-5 h-5" />
-                  Call Insurance Provider
-                </button>
-              )}
+              {/* Call Pharmacy Button */}
+              <button
+                onClick={handleCallPharmacy}
+                className="w-full bg-card border border-border text-foreground font-semibold text-base py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.97] transition-all duration-200 shadow-sm"
+              >
+                <Phone className="w-5 h-5" />
+                Call Pharmacy
+              </button>
             </>
           ) : (
             <>

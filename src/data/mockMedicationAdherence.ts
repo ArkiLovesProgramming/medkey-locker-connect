@@ -86,11 +86,11 @@ export const medicationAdherence: MedicationAdherence[] = [
     30
   ),
 
-  // Generate records for David's Atorvastatin (once daily)
+  // Generate records for David's Rosuvastatin (once daily)
   ...generateAdherenceRecords(
     'rx-002',
-    'med-003',
-    'Atorvastatin',
+    'med-016',
+    'Rosuvastatin',
     'user-002',
     'David Jenkins',
     'Once daily in the evening',
@@ -126,8 +126,8 @@ export const medicationAdherence: MedicationAdherence[] = [
   {
     id: 'adh-001',
     prescriptionId: 'rx-002',
-    medicationId: 'med-003',
-    medicationName: 'Atorvastatin',
+    medicationId: 'med-016',
+    medicationName: 'Rosuvastatin',
     patientId: 'user-002',
     patientName: 'David Jenkins',
     scheduledDate: '2026-03-14',
@@ -141,8 +141,8 @@ export const medicationAdherence: MedicationAdherence[] = [
   {
     id: 'adh-002',
     prescriptionId: 'rx-002',
-    medicationId: 'med-003',
-    medicationName: 'Atorvastatin',
+    medicationId: 'med-016',
+    medicationName: 'Rosuvastatin',
     patientId: 'user-002',
     patientName: 'David Jenkins',
     scheduledDate: '2026-03-13',
@@ -156,8 +156,8 @@ export const medicationAdherence: MedicationAdherence[] = [
   {
     id: 'adh-003',
     prescriptionId: 'rx-002',
-    medicationId: 'med-003',
-    medicationName: 'Atorvastatin',
+    medicationId: 'med-016',
+    medicationName: 'Rosuvastatin',
     patientId: 'user-002',
     patientName: 'David Jenkins',
     scheduledDate: '2026-03-09',
@@ -247,8 +247,8 @@ export const medicationAdherence: MedicationAdherence[] = [
 // Pre-calculated adherence summaries
 export const adherenceSummaries: AdherenceSummary[] = [
   {
-    medicationId: 'med-003',
-    medicationName: 'Atorvastatin',
+    medicationId: 'med-016',
+    medicationName: 'Rosuvastatin',
     patientId: 'user-002',
     periodStart: '2026-02-15',
     periodEnd: '2026-03-14',

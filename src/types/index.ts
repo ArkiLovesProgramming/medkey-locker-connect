@@ -97,6 +97,8 @@ export interface ActiveMedication extends Medication {
   refillable: boolean;
   refillsRemaining?: number;
   prescriptionId: string;
+  isNew?: boolean; // Flag for NEW RX badge
+  asNeeded?: boolean; // Flag for "Available as needed" display
 }
 
 export interface PastMedication extends Medication {

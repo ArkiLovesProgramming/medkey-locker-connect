@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, HelpCircle, Package, Pill, User, Scan, Sun } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { getReadyOrders } from "@/data/mockPickupOrders";
 
 interface SecureLockerPickupProps {
-  onNavigate: (screen: number) => void;
-  onScanSuccess?: () => void;
+  onNavigate: (screen: number, prescriptionId?: string) => void;
+  onScanSuccess?: (orderNumber?: string) => void;
 }
 
 const QRCodePlaceholder = () => {
@@ -43,6 +44,10 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
   const [timeLeft, setTimeLeft] = useState(14 * 60 + 59);
   const [copied, setCopied] = useState(false);
 
+  // Get the first ready order for display
+  const readyOrders = getReadyOrders();
+  const currentOrder = readyOrders[0];
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 14 * 60 + 59));
@@ -54,7 +59,8 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
   const seconds = (timeLeft % 60).toString().padStart(2, "0");
 
   const handleCopyOrder = () => {
-    navigator.clipboard?.writeText("29384-B");
+    const orderNum = currentOrder?.orderNumber || "29384-B";
+    navigator.clipboard?.writeText(orderNum);
     setCopied(true);
     toast({ title: "📋 Copied!", description: "Order number copied to clipboard." });
     setTimeout(() => setCopied(false), 2000);
@@ -67,7 +73,7 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
     });
     
     setTimeout(() => {
-      onScanSuccess?.();
+      onScanSuccess?.(currentOrder?.orderNumber);
     }, 1000);
   };
 
@@ -95,7 +101,7 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
           className="bg-teal-dark px-5 py-2 rounded-full flex items-center gap-2 mx-auto active:scale-95 transition-transform shadow-sm"
         >
           <Package className="w-4 h-4 text-white/90" />
-          <span className="text-white font-semibold text-sm">Order #29384-B</span>
+          <span className="text-white font-semibold text-sm">Order #{currentOrder?.orderNumber || '29384-B'}</span>
         </button>
       </div>
 
@@ -144,12 +150,9 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
         </div>
 
         <div className="space-y-2">
-          {[
-            { name: "Lily Jenkins", med: "Amoxicillin (Qty: 14)", prescriptionId: "rx-001" },
-            { name: "David Jenkins", med: "Atorvastatin (Qty: 30)", prescriptionId: "rx-002" },
-          ].map((item) => (
+          {(currentOrder?.items || []).map((item) => (
             <button
-              key={item.name}
+              key={item.prescriptionId}
               onClick={() => onNavigate(2, item.prescriptionId)}
               className="w-full bg-white rounded-xl p-3 shadow-sm border border-border/50 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
             >
@@ -157,11 +160,14 @@ const SecureLockerPickup = ({ onNavigate, onScanSuccess }: SecureLockerPickupPro
                 <User className="w-5 h-5 text-teal-dark" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-foreground text-sm truncate">{item.name}</p>
-                <p className="text-xs text-muted-foreground font-medium truncate">{item.med}</p>
+                <p className="font-bold text-foreground text-sm truncate">{item.patientName}</p>
+                <p className="text-xs text-muted-foreground font-medium truncate">{item.medicationName} (Qty: {item.quantity})</p>
               </div>
             </button>
           ))}
+          {(!currentOrder || currentOrder.items.length === 0) && (
+            <p className="text-sm text-muted-foreground text-center py-4">No medications in this order.</p>
+          )}
         </div>
       </div>
     </div>

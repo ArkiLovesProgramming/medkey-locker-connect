@@ -12,9 +12,10 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { pickupOrders } from "@/data/mockPickupOrders";
 
 interface LockerUnlockedViewProps {
-  onNavigate: (screen: number) => void;
+  onNavigate: (screen: number, prescriptionId?: string) => void;
   onBack: () => void;
   orderNumber?: string;
 }
@@ -26,18 +27,14 @@ interface Locker {
   hasMedication: boolean;
 }
 
-interface Medication {
-  id: string;
-  patientName: string;
-  medicationName: string;
-  quantity: number;
-}
-
 const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedViewProps) => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [isCollecting, setIsCollecting] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  // Find the order from mock data
+  const order = pickupOrders.find(o => o.orderNumber === orderNumber) || pickupOrders.find(o => o.status === 'ready');
 
   // 倒计时
   useEffect(() => {
@@ -101,31 +98,42 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
     onBack();
   };
 
-  // 储物柜数据
-  const lockerGrid: Locker[] = [
-    { id: 'A1', label: 'A1', isOpen: false, hasMedication: false },
-    { id: 'A2', label: 'A2', isOpen: false, hasMedication: false },
-    { id: 'A3', label: 'A3', isOpen: false, hasMedication: false },
-    { id: 'A4', label: 'A4', isOpen: false, hasMedication: false },
-    { id: 'B1', label: 'B1', isOpen: false, hasMedication: false },
-    { id: 'B2', label: 'B2', isOpen: false, hasMedication: false },
-    { id: 'B3', label: 'B3', isOpen: false, hasMedication: false },
-    { id: 'B4', label: 'B4', isOpen: false, hasMedication: false },
-    { id: 'B11', label: 'B11', isOpen: true, hasMedication: true },
-    { id: 'B12', label: 'B12', isOpen: true, hasMedication: true },
-    { id: 'B13', label: 'B13', isOpen: false, hasMedication: false },
-    { id: 'B14', label: 'B14', isOpen: false, hasMedication: false },
-    { id: 'C1', label: 'C1', isOpen: false, hasMedication: false },
-    { id: 'C2', label: 'C2', isOpen: false, hasMedication: false },
-    { id: 'C3', label: 'C3', isOpen: false, hasMedication: false },
-    { id: 'C4', label: 'C4', isOpen: false, hasMedication: false },
-  ];
+  // 储物柜数据 - 基于实际订单的储物柜号
+  const getLockerGrid = (): Locker[] => {
+    const targetLocker = order?.lockerNumber || 'A-12';
+    // Parse locker number (e.g., "A-12" -> section A, number 12)
+    const match = targetLocker.match(/([A-B])-(\d+)/);
+    const targetSection = match ? match[1] : 'A';
+    const targetNum = match ? parseInt(match[2]) : 12;
+    
+    const grid: Locker[] = [];
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        const label = `${String.fromCharCode(65 + row)}${col + 1}`;
+        const lockerId = `${String.fromCharCode(65 + row)}-${col + 1}`;
+        const isOpen = lockerId === targetLocker || 
+                       (targetSection === String.fromCharCode(65 + row) && (col + 1) === targetNum);
+        grid.push({
+          id: lockerId,
+          label,
+          isOpen,
+          hasMedication: isOpen,
+        });
+      }
+    }
+    return grid;
+  };
+  
+  const lockerGrid = getLockerGrid();
 
-  // 药品数据
-  const medications: Medication[] = [
-    { id: 'med-1', patientName: 'Lily Jenkins', medicationName: 'Amoxicillin 500mg', quantity: 14 },
-    { id: 'med-2', patientName: 'David Jenkins', medicationName: 'Atorvastatin 20mg', quantity: 30 },
-  ];
+  // 药品数据 - 来自实际订单
+  const medications = order?.items.map((item, index) => ({
+    id: `med-${index}`,
+    patientName: item.patientName,
+    medicationName: item.medicationName,
+    quantity: item.quantity,
+    prescriptionId: item.prescriptionId,
+  })) || [];
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = (timeLeft % 60).toString().padStart(2, '0');
@@ -183,7 +191,10 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
             MEDLOCKD UNIT 04
           </span>
-          <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-teal-dark">{order?.lockerNumber || 'A-12'}</span>
+            <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
+          </div>
         </div>
         
         {/* 4x4 网格 */}
@@ -215,7 +226,11 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
         
         <div className="space-y-2">
           {medications.map((med) => (
-            <div key={med.id} className="flex items-start gap-3 p-3 bg-teal-light/10 rounded-xl">
+            <button 
+              key={med.id} 
+              onClick={() => med.prescriptionId && onNavigate(2, med.prescriptionId)}
+              className="flex items-start gap-3 p-3 bg-teal-light/10 rounded-xl w-full text-left active:scale-[0.98] transition-transform"
+            >
               <div className="w-10 h-10 rounded-full bg-teal-light/30 flex items-center justify-center flex-shrink-0">
                 <User className="w-5 h-5 text-teal-dark" />
               </div>
@@ -225,7 +240,7 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
                   {med.medicationName} • Qty: {med.quantity}
                 </p>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

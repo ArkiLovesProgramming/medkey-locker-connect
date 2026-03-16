@@ -106,7 +106,7 @@ export const medicationDatabase: Medication[] = [
     strength: '10mg',
     form: 'tablet',
     dosage: '10mg',
-    frequency: 'Once daily',
+    frequency: 'once daily as needed',
     instructions: 'Can be taken with or without food. May cause drowsiness.',
     sideEffects: ['Drowsiness', 'Dry mouth', 'Fatigue', 'Headache'],
     interactions: ['CNS depressants', 'Alcohol'],
@@ -248,7 +248,7 @@ export const medicationDatabase: Medication[] = [
     strength: '20mg',
     form: 'tablet',
     dosage: '20mg',
-    frequency: 'Once daily',
+    frequency: 'Once daily in the evening',
     instructions: 'Take at the same time each day. Avoid grapefruit products.',
     sideEffects: ['Muscle pain', 'Weakness', 'Headache', 'Nausea', 'Stomach pain'],
     interactions: ['Cyclosporine', 'Gemfibrozil', 'Niacin', 'Warfarin'],
@@ -267,12 +267,13 @@ export const activeMedications: ActiveMedication[] = [
     startDate: '2026-03-08',
     nextDose: '8:00 PM',
     takenToday: false,
-    refillable: true,
+    refillable: false, // New RX - needs to be filled first
     refillsRemaining: 0,
     prescriptionId: 'rx-001',
+    isNew: true, // Flag for NEW RX badge
   },
   {
-    ...medicationDatabase.find(m => m.id === 'med-003')!,
+    ...medicationDatabase.find(m => m.id === 'med-017')!,
     memberId: 'user-002',
     memberName: 'David',
     startDate: '2024-01-15',
@@ -302,6 +303,7 @@ export const activeMedications: ActiveMedication[] = [
     refillable: false,
     refillsRemaining: 0,
     prescriptionId: 'rx-005',
+    asNeeded: true, // Flag for "Available as needed" display
   },
 ];
 

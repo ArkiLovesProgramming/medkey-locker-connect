@@ -263,7 +263,7 @@ export const labResults: LabResult[] = [
         ],
       },
     ],
-    notes: 'Initial diagnosis. Started on Metformin and Atorvastatin.',
+    notes: 'Initial diagnosis. Started on Metformin and Rosuvastatin.',
   },
   
   // Sarah's Thyroid Panel

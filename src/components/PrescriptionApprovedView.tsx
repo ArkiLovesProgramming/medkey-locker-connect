@@ -16,7 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { prescriptions } from "@/data/mockPrescriptions";
 
 interface PrescriptionApprovedViewProps {
-  onNavigate: (screen: number) => void;
+  onNavigate: (screen: number, prescriptionId?: string) => void;
   onBack: () => void;
   prescriptionId?: string;
 }

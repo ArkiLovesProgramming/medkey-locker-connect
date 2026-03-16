@@ -79,7 +79,7 @@ export const medicalRecords: MedicalRecord[] = [
     date: '2024-01-10',
     provider: 'Dr. Robert Chen',
     facility: 'Springfield Cardiology',
-    notes: 'LDL 165 mg/dL, HDL 38 mg/dL. Started on Atorvastatin 20mg and dietary changes.',
+    notes: 'LDL 165 mg/dL, HDL 38 mg/dL. Started on Rosuvastatin 20mg and dietary changes.',
     relatedPrescriptions: ['rx-002'],
   },
   {
@@ -105,7 +105,7 @@ export const medicalRecords: MedicalRecord[] = [
     date: '2025-09-10',
     provider: 'Dr. Robert Chen',
     facility: 'Springfield Cardiology',
-    notes: 'Cholesterol well controlled on current medication. Continue Atorvastatin 20mg.',
+    notes: 'Cholesterol well controlled on current medication. Continue Rosuvastatin 20mg.',
     relatedPrescriptions: ['rx-002'],
   },
   {
@@ -280,7 +280,7 @@ export const healthConditions: HealthCondition[] = [
     dateDiagnosed: '2024-01-10',
     status: 'chronic',
     severity: 'moderate',
-    notes: 'LDL goal <100 mg/dL. On Atorvastatin 20mg. Lifestyle modifications ongoing.',
+    notes: 'LDL goal <100 mg/dL. On Rosuvastatin 20mg. Lifestyle modifications ongoing.',
   },
   {
     id: 'hc-006',
