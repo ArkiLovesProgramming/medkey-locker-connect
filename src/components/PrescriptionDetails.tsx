@@ -266,29 +266,31 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                           </button>
 
                           {showDenialDetails[index] && (
-                            <div className="mt-2 pt-2 border-t border-destructive/20 space-y-2">
-                              {item.denialDetails && (
-                                <p className="text-xs text-muted-foreground leading-relaxed">
-                                  {item.denialDetails}
-                                </p>
-                              )}
-                              {item.solution && (
-                                <div className="flex items-start gap-1.5">
-                                  <Check className="w-3.5 h-3.5 text-success flex-shrink-0 mt-0.5" />
-                                  <p className="text-xs text-success font-medium">{item.solution}</p>
-                                </div>
-                              )}
+                            <div className="mt-2 space-y-2">
+                              <div className="bg-muted/50 rounded-lg p-3 space-y-3">
+                                {item.denialDetails && (
+                                  <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {item.denialDetails}
+                                  </p>
+                                )}
+                                {item.solution && (
+                                  <div className="flex items-start gap-2">
+                                    <Check className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+                                    <p className="text-sm text-success font-medium">{item.solution}</p>
+                                  </div>
+                                )}
+                              </div>
                               {item.contactPhone && (
                                 <a
                                   href={`tel:${item.contactPhone}`}
-                                  className="flex items-center gap-1.5 text-xs text-primary hover:underline mt-1"
+                                  className="flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
                                   onClick={() => toast({
                                     title: "Calling Insurance",
                                     description: `Connecting to ${item.provider} at ${item.contactPhone}...`,
                                   })}
                                 >
-                                  <Phone className="w-3.5 h-3.5" />
-                                  {item.contactPhone}
+                                  <Phone className="w-4 h-4" />
+                                  Call Blue Cross: {item.contactPhone}
                                 </a>
                               )}
                             </div>
