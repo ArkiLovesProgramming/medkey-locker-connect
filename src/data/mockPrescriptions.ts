@@ -155,8 +155,8 @@ export const prescriptions: Prescription[] = [
   {
     id: 'rx-002',
     rxNumber: 'RX-4920392-03',
-    medicationId: 'med-003',
-    medicationName: 'Atorvastatin',
+    medicationId: 'med-016',
+    medicationName: 'Rosuvastatin',
     strength: '20mg',
     quantity: 90,
     dosage: '20mg',
@@ -443,6 +443,11 @@ export const prescriptions: Prescription[] = [
           contactPhone: '1-800-123-4567',
         },
       ],
+    },
+    pickupInfo: {
+      estimatedReadyTime: '2026-03-17T14:00:00Z',
+      lockerNumber: 'B-08',
+      orderNumber: '48291-C',
     },
     notes: 'Qty 30 capsules',
   },

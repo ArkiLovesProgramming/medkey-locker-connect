@@ -250,63 +250,6 @@ export const familyMembers: FamilyMember[] = [
     },
     createdAt: '2022-01-15T08:00:00Z',
   },
-  // Child - Son (New)
-  {
-    id: 'user-004',
-    email: '',
-    firstName: 'Emma',
-    lastName: 'Jenkins',
-    phone: '',
-    dateOfBirth: '2018-07-25',
-    role: 'member',
-    relationship: 'child',
-    avatar: undefined, // Use SVG avatar
-    insuranceInfo: insurancePlans.blueCrossPPO,
-    allergies: commonAllergies.none,
-    medicalConditions: commonMedicalConditions.none,
-    preferences: {
-      homePharmacyId: undefined,
-    },
-    createdAt: '2022-01-15T08:00:00Z',
-  },
-  // Parent - Mother
-  {
-    id: 'user-005',
-    email: 'margaret.smith@email.com',
-    firstName: 'Margaret',
-    lastName: 'Smith',
-    phone: '+1 (555) 234-5680',
-    dateOfBirth: '1960-04-12',
-    role: 'member',
-    relationship: 'parent',
-    avatar: undefined, // Use SVG avatar
-    insuranceInfo: insurancePlans.aetnaHMO,
-    allergies: [...commonAllergies.aspirin, ...commonAllergies.sulfa],
-    medicalConditions: [...commonMedicalConditions.arthritis, ...commonMedicalConditions.hypothyroidism],
-    preferences: {
-      homePharmacyId: undefined,
-    },
-    createdAt: '2023-03-20T10:00:00Z',
-  },
-  // Parent - Father
-  {
-    id: 'user-006',
-    email: 'robert.smith@email.com',
-    firstName: 'Robert',
-    lastName: 'Smith',
-    phone: '+1 (555) 234-5681',
-    dateOfBirth: '1958-11-30',
-    role: 'member',
-    relationship: 'parent',
-    avatar: undefined, // Use SVG avatar
-    insuranceInfo: insurancePlans.unitedHealthcare,
-    allergies: commonAllergies.codeine,
-    medicalConditions: [...commonMedicalConditions.hypertension, ...commonMedicalConditions.acidReflux],
-    preferences: {
-      homePharmacyId: undefined,
-    },
-    createdAt: '2023-03-20T10:00:00Z',
-  },
 ];
 
 // ============================================================================
