@@ -170,7 +170,7 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
 
         {/* Display active medications from hook */}
         {activeMeds && activeMeds.length > 0 ? (
-          activeMeds.slice(0, 3).map((med) => (
+          activeMeds.map((med) => (
             <button
               key={med.prescriptionId}
               onClick={() => onNavigate(2, med.prescriptionId)}
@@ -178,7 +178,10 @@ const FamilyDashboard = ({ onNavigate }: FamilyDashboardProps) => {
             >
               <div className="flex items-start gap-3">
                 <AvatarSVG
-                  name={med.memberName}
+                  name={(() => {
+                    const member = familyMembers?.find(m => m.id === med.memberId);
+                    return member ? `${member.firstName} ${member.lastName}` : med.memberName;
+                  })()}
                   size={48}
                   className="rounded-xl flex-shrink-0"
                 />

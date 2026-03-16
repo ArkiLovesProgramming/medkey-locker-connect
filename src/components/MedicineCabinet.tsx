@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Search, ChevronLeft, X, Calendar, Info } from "lucide-react";
+import { Search, X, Calendar, Info } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useMedications, usePastMedications, useFamilyMembers, useRefillRequest } from "@/hooks/useData";
+import { AvatarSVG } from "@/assets/AvatarSVG";
 
 interface MedicineCabinetProps {
   onNavigate: (screen: number, prescriptionId?: string) => void;
@@ -51,21 +52,6 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
     );
   };
 
-  // Helper to get member initials
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
-
-  // Helper to get member color
-  const getMemberColor = (memberId: string) => {
-    const colors: Record<string, string> = {
-      'user-001': 'bg-green-500',
-      'user-002': 'bg-orange-500',
-      'user-003': 'bg-blue-500',
-    };
-    return colors[memberId] || 'bg-gray-500';
-  };
-
   // Helper to get due date (mock calculation based on prescription data)
   const getDueDate = (med: any) => {
     // Mock due dates based on medication name for demo
@@ -111,15 +97,7 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => onNavigate(0)}
-                className="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-              >
-                <ChevronLeft className="w-6 h-6 text-teal-700" />
-              </button>
-              <h1 className="text-xl font-bold text-teal-700 tracking-wide">MEDICINE CABINET</h1>
-            </div>
+            <h1 className="text-2xl font-bold text-foreground">Medicine Cabinet</h1>
             <button
               onClick={() => setSearchOpen(true)}
               className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center active:scale-95 transition-transform"
@@ -142,20 +120,21 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
               <button
                 key={f}
                 onClick={() => setSelected(f)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay border ${
-                  isSelected
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold flex-shrink-0 transition-all duration-200 active:scale-95 touch-feedback touch-no-delay border ${isSelected
                     ? "bg-teal-700 text-white border-teal-700 shadow-md"
                     : "bg-white text-gray-700 border-gray-200 hover:border-teal-300"
-                }`}
+                  }`}
                 style={{ scrollSnapAlign: 'start' }}
               >
                 {f === "all" ? (
                   <span className="text-sm">All</span>
                 ) : member ? (
                   <>
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${getMemberColor(f)}`}>
-                      {getInitials(member.firstName + ' ' + member.lastName)}
-                    </div>
+                    <AvatarSVG
+                      name={`${member.firstName} ${member.lastName}`}
+                      size={24}
+                      className="rounded-full"
+                    />
                     <span>{filterLabels[f]}</span>
                   </>
                 ) : (
@@ -179,8 +158,9 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             <p className="text-sm text-muted-foreground text-center py-8">No active medications found.</p>
           ) : (
             filteredActive.map((med, index) => {
-              const member = familyMembers?.find(m => m.firstName === med.memberName);
+              const member = familyMembers?.find(m => m.id === med.memberId);
               const memberId = member?.id || 'user-001';
+              const memberFullName = member ? `${member.firstName} ${member.lastName}` : med.memberName;
               const dueDate = getDueDate(med);
               const newRx = isNewRx(med);
 
@@ -188,10 +168,11 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                 <div key={`${med.id || 'med'}-${index}`} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-fade-in">
                   {/* Avatar and header info */}
                   <div className="flex items-start gap-3 mb-3">
-                    {/* Avatar with initials */}
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0 ${getMemberColor(memberId)}`}>
-                      {getInitials(med.memberName)}
-                    </div>
+                    <AvatarSVG
+                      name={memberFullName}
+                      size={48}
+                      className="rounded-xl flex-shrink-0"
+                    />
                     <div className="flex-1 min-w-0">
                       {/* Medication name and tags row */}
                       <div className="flex items-start justify-between gap-2">
@@ -269,8 +250,9 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
             <p className="text-sm text-muted-foreground text-center py-4">No past medications found.</p>
           ) : (
             filteredPast.map((med, index) => {
-              const member = familyMembers?.find(m => m.firstName === med.memberName);
+              const member = familyMembers?.find(m => m.id === med.memberId);
               const memberId = member?.id || 'user-001';
+              const memberFullName = member ? `${member.firstName} ${member.lastName}` : med.memberName;
 
               return (
                 <button
@@ -280,9 +262,11 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 ${getMemberColor(memberId)}`}>
-                        {getInitials(med.memberName)}
-                      </div>
+                      <AvatarSVG
+                        name={memberFullName}
+                        size={40}
+                        className="rounded-full flex-shrink-0"
+                      />
                       <div>
                         <p className="font-bold text-gray-900">{med.name}</p>
                         <p className="text-sm text-gray-500">{med.strength} · {med.frequency}</p>

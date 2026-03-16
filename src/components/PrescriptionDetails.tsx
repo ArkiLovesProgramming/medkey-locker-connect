@@ -28,8 +28,8 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
   const [showDenialDetails, setShowDenialDetails] = useState<Record<number, boolean>>({});
 
   // Find the prescription from mock data
-  const rx = prescriptions.find(p => p.id === prescriptionId) || 
-             prescriptions[0];
+  const rx = prescriptions.find(p => p.id === prescriptionId) ||
+    prescriptions[0];
 
   const handleApprove = () => {
     // Navigate to the approval confirmation view (screen 7) immediately
@@ -84,16 +84,15 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
 
         {/* Prescription Status Badge */}
         <div className="flex items-center justify-center mb-4">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-            rx.status === 'needs-approval' 
-              ? 'bg-amber/20 text-amber' 
+          <span className={`px-3 py-1 rounded-full text-xs font-medium ${rx.status === 'needs-approval'
+              ? 'bg-amber/20 text-amber'
               : rx.status === 'ready'
-              ? 'bg-success/20 text-success'
-              : 'bg-teal-light text-teal-dark'
-          }`}>
-            {rx.status === 'needs-approval' ? 'Needs Approval' : 
-             rx.status === 'ready' ? 'Ready for Pickup' : 
-             rx.status === 'active' ? 'Active' : rx.status}
+                ? 'bg-success/20 text-success'
+                : 'bg-teal-light text-teal-dark'
+            }`}>
+            {rx.status === 'needs-approval' ? 'Needs Approval' :
+              rx.status === 'ready' ? 'Ready for Pickup' :
+                rx.status === 'active' ? 'Active' : rx.status}
           </span>
         </div>
 
@@ -245,21 +244,21 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
                     <div key={index}>
                       {/* Denied Coverage Item */}
                       {item.isDenied ? (
-                        <div className="bg-amber-50 rounded-xl p-3 mb-2 border border-amber-200">
+                        <div className={`rounded-xl p-3 mb-2 border ${item.denialReason === 'Coverage Denied' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'}`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded-full border-2 border-amber-500 flex items-center justify-center">
-                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${item.denialReason === 'Coverage Denied' ? 'border-red-500' : 'border-amber-500'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${item.denialReason === 'Coverage Denied' ? 'bg-red-500' : 'bg-amber-500'}`} />
                               </div>
                               <span className="text-sm font-medium text-foreground">{item.provider}</span>
                             </div>
-                            <span className="font-bold text-amber-600">-${item.amount.toFixed(2)}</span>
+                            <span className={`font-bold ${item.denialReason === 'Coverage Denied' ? 'text-red-600' : 'text-amber-600'}`}>-${item.amount.toFixed(2)}</span>
                           </div>
 
                           {/* Collapsible Denial Details */}
                           <button
                             onClick={() => setShowDenialDetails(prev => ({ ...prev, [index]: !prev[index] }))}
-                            className="w-full flex items-center justify-between text-xs text-amber-700 hover:text-amber-800 transition-colors"
+                            className={`w-full flex items-center justify-between text-xs transition-colors ${item.denialReason === 'Coverage Denied' ? 'text-red-700 hover:text-red-800' : 'text-amber-700 hover:text-amber-800'}`}
                           >
                             <span className="flex items-center gap-1">
                               <AlertCircle className="w-3.5 h-3.5" />
@@ -270,11 +269,17 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
 
                           {showDenialDetails[index] && (
                             <div className="mt-2 space-y-2">
-                              <div className="bg-white rounded-lg p-3 space-y-3 border border-amber-100">
+                              <div className={`bg-white rounded-lg p-3 space-y-3 border ${item.denialReason === 'Coverage Denied' ? 'border-red-100' : 'border-amber-100'}`}>
                                 {item.denialDetails && (
                                   <p className="text-sm text-muted-foreground leading-relaxed">
                                     {item.denialDetails}
                                   </p>
+                                )}
+                                {item.denialReason === 'Coverage Denied' && item.contactPhone && (
+                                  <div className="flex items-center gap-2 mt-3 pt-1 font-bold text-teal-dark">
+                                    <Phone className="w-4 h-4" />
+                                    <span>Call {item.provider.replace(' Insurance', '')}: {item.contactPhone}</span>
+                                  </div>
                                 )}
                               </div>
                             </div>
