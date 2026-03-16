@@ -33,7 +33,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: true,
   },
-  
+
   // Cardiovascular
   {
     id: 'med-003',
@@ -65,7 +65,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: true,
   },
-  
+
   // Pain Relief
   {
     id: 'med-006',
@@ -97,7 +97,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: false,
     prescriptionRequired: false,
   },
-  
+
   // Allergy
   {
     id: 'med-008',
@@ -144,7 +144,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: false,
   },
-  
+
   // Diabetes
   {
     id: 'med-011',
@@ -176,7 +176,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: true,
   },
-  
+
   // Mental Health
   {
     id: 'med-013',
@@ -208,7 +208,7 @@ export const medicationDatabase: Medication[] = [
     requiresRefill: true,
     prescriptionRequired: true,
   },
-  
+
   // Hormones
   {
     id: 'med-015',
@@ -253,6 +253,22 @@ export const medicationDatabase: Medication[] = [
     sideEffects: ['Muscle pain', 'Weakness', 'Headache', 'Nausea', 'Stomach pain'],
     interactions: ['Cyclosporine', 'Gemfibrozil', 'Niacin', 'Warfarin'],
     category: 'cardiovascular',
+    requiresRefill: true,
+    prescriptionRequired: true,
+  },
+  // ADHD
+  {
+    id: 'med-020',
+    name: 'Vyvanse',
+    genericName: 'Lisdexamfetamine Dimesylate',
+    strength: '30mg',
+    form: 'capsule',
+    dosage: '30mg',
+    frequency: 'Take one Capsule once daily',
+    instructions: 'Take in the morning with or without food. Avoid late afternoon doses to prevent insomnia.',
+    sideEffects: ['Decreased appetite', 'Insomnia', 'Dry mouth', 'Increased heart rate'],
+    interactions: ['MAOIs', 'Antacids', 'SSRIs'],
+    category: 'other',
     requiresRefill: true,
     prescriptionRequired: true,
   },
@@ -304,6 +320,17 @@ export const activeMedications: ActiveMedication[] = [
     refillsRemaining: 0,
     prescriptionId: 'rx-005',
     asNeeded: true, // Flag for "Available as needed" display
+  },
+  {
+    ...medicationDatabase.find(m => m.id === 'med-020')!,
+    memberId: 'user-003',
+    memberName: 'Lily',
+    startDate: '2025-08-15',
+    nextDose: '8:00 AM',
+    takenToday: true,
+    refillable: true,
+    refillsRemaining: 2,
+    prescriptionId: 'rx-011',
   },
 ];
 
@@ -429,7 +456,7 @@ export function getActiveMedicationsByMember(memberId: string): ActiveMedication
 
 export function searchMedications(query: string): Medication[] {
   const lowerQuery = query.toLowerCase();
-  return medicationDatabase.filter(m => 
+  return medicationDatabase.filter(m =>
     m.name.toLowerCase().includes(lowerQuery) ||
     m.genericName?.toLowerCase().includes(lowerQuery) ||
     m.category.toLowerCase().includes(lowerQuery)
