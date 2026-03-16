@@ -218,22 +218,13 @@ const MedicineCabinet = ({ onNavigate }: MedicineCabinetProps) => {
                     >
                       View Details
                     </button>
-                    {med.refillable ? (
-                      <button
-                        onClick={() => handleRefillRequest(med.id, med.prescriptionId, med.name)}
-                        disabled={requestingMedId === med.id}
-                        className="flex-1 py-2.5 px-4 rounded-xl bg-teal-700 text-white text-sm font-semibold active:scale-[0.98] transition-transform disabled:opacity-50"
-                      >
-                        {requestingMedId === med.id ? "Requesting..." : "Request Refill"}
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => onNavigate(2, med.prescriptionId)}
-                        className="flex-1 py-2.5 px-4 rounded-xl bg-teal-700 text-white text-sm font-semibold active:scale-[0.98] transition-transform"
-                      >
-                        Fill Prescription
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleRefillRequest(med.id, med.prescriptionId, med.name)}
+                      disabled={requestingMedId === med.id}
+                      className="flex-1 py-2.5 px-4 rounded-xl bg-teal-700 text-white text-sm font-semibold active:scale-[0.98] transition-transform disabled:opacity-50"
+                    >
+                      {requestingMedId === med.id ? "Requesting..." : "Request Refill"}
+                    </button>
                   </div>
                 </div>
               );

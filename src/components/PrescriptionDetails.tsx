@@ -70,7 +70,7 @@ const PrescriptionDetails = ({ prescriptionId, onNavigate }: PrescriptionDetails
       {/* Header - Teal background */}
       <div className="bg-teal-dark rounded-b-3xl px-5 pt-5 pb-7">
         <div className="flex items-center justify-between mb-5">
-          <button onClick={() => onNavigate(1)} className="p-1 active:scale-90 transition-transform">
+          <button onClick={() => onNavigate(4)} className="p-1 active:scale-90 transition-transform">
             <ArrowLeft className="w-6 h-6 text-primary-foreground" />
           </button>
           <h2 className="text-primary-foreground font-semibold text-base">Prescription Details</h2>
