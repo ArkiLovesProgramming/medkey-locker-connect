@@ -143,7 +143,10 @@ export const prescriptions: Prescription[] = [
       insuranceCoverage: 35.00,
       copay: 10.00,
       deductible: 0,
-      coverageReason: 'Standard formulary coverage',
+      coverageReason: 'Blue Cross (100%)',
+      coverageItems: [
+        { provider: 'Blue Cross', percentage: 100, amount: 35.00 },
+      ],
     },
     pickupInfo: {
       estimatedReadyTime: '2025-10-21T14:00:00Z',
