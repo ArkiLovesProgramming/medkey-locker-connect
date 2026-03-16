@@ -102,19 +102,18 @@ const LockerUnlockedView = ({ onNavigate, onBack, orderNumber }: LockerUnlockedV
   const getLockerGrid = (): Locker[] => {
     const targetLocker = order?.lockerNumber || 'A-12';
     // Parse locker number (e.g., "A-12" -> section A, number 12)
-    const match = targetLocker.match(/([A-B])-(\d+)/);
-    const targetSection = match ? match[1] : 'A';
-    const targetNum = match ? parseInt(match[2]) : 12;
+    const match = targetLocker.match(/([A-Z])-(\d+)/i);
+    const targetSection = match ? match[1].toUpperCase() : 'A';
+    const targetNum = match ? parseInt(match[2], 10) : 12;
     
     const grid: Locker[] = [];
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
-        const label = `${String.fromCharCode(65 + row)}${col + 1}`;
-        const lockerId = `${String.fromCharCode(65 + row)}-${col + 1}`;
-        const isOpen = lockerId === targetLocker || 
-                       (targetSection === String.fromCharCode(65 + row) && (col + 1) === targetNum);
+        const num = row * 4 + col + 1; // 1 to 16
+        const label = `${targetSection}${num}`;
+        const isOpen = num === targetNum;
         grid.push({
-          id: lockerId,
+          id: `${targetSection}-${num}`,
           label,
           isOpen,
           hasMedication: isOpen,
