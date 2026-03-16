@@ -64,6 +64,10 @@ const Index = () => {
         return;
       }
     }
+    // Close approved view when navigating to any screen
+    if (showApprovedView) {
+      setShowApprovedView(false);
+    }
     setActiveScreen(screen);
   };
 
@@ -78,7 +82,7 @@ const Index = () => {
           />
         ) : showApprovedView ? (
           <PrescriptionApprovedView
-            onNavigate={setActiveScreen}
+            onNavigate={handleNavigate}
             onBack={() => setShowApprovedView(false)}
             prescriptionId={approvedPrescriptionId}
           />

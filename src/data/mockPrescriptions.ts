@@ -177,6 +177,16 @@ export const prescriptions: Prescription[] = [
       insuranceCoverage: 70.00,
       copay: 15.00,
       deductible: 0,
+      coverageReason: 'Blue Cross (75%) + Sunlife (25%)',
+      coverageItems: [
+        { provider: 'Blue Cross', percentage: 75, amount: 52.50 },
+        { provider: 'Sunlife', percentage: 25, amount: 11.25 },
+      ],
+    },
+    pickupInfo: {
+      estimatedReadyTime: '2026-03-17T14:00:00Z',
+      lockerNumber: 'B-08',
+      orderNumber: '48291-C',
     },
     notes: 'Take in the evening. Avoid grapefruit products.',
   },
